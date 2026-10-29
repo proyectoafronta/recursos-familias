@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recursos per a famílies · AFRONTA</title>
+
+<!-- Metadades PWA per a mòbil i app -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#064e3b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AFRONTA">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{--bg:#f8fafc;--card:#fff;--ink:#1e293b;--mut:#64748b;--g:#059669;--g2:#047857;--gd:#064e3b;--line:#e2e8f0;--am:#f59e0b;--fs:16px}
+body.hc{--bg:#000;--card:#000;--ink:#fff;--mut:#fff;--g:#ffe600;--g2:#ffe600;--gd:#000;--line:#fff}
+*{box-sizing:border-box}html{font-size:var(--fs);scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;font-family:system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+a{color:var(--g2)}:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+button,select,input{font:inherit}
+.w{max-width:1180px;margin:0 auto;padding:0 16px}
+.top{background:#0f172a;color:#fff;font-size:.8rem;padding:7px 0}
+.top .w{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:space-between;align-items:center}
+.em{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.em b{color:#34d399}.em a{color:#fff;text-decoration:none;font-weight:700;padding:2px 9px;border-radius:6px}
+.tl{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tl button,.tl select{background:#1e293b;color:#fff;border:1px solid #475569;border-radius:6px;padding:3px 9px;cursor:pointer}
+.tl button[aria-pressed=true]{background:var(--g);color:#fff}
+.brand{background:var(--card);border-bottom:1px solid var(--line)}
+.brand .w{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;justify-content:space-between;padding-top:10px;padding-bottom:10px}
+.brand img{height:62px;max-width:100%;object-fit:contain}
+nav{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:1000;box-shadow:0 1px 4px #0001}
+nav .w{display:flex;gap:6px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
+nav a{text-decoration:none;font-weight:700;color:var(--ink);padding:7px 14px;border-radius:10px}
+nav a:hover{background:#ecfdf5;color:#047857}
+nav a i{color:var(--g);margin-right:6px}
+.band{background:var(--am);color:#0f172a;font-weight:600;padding:9px 0;font-size:.9rem}
+.band .w{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.band a{background:#0f172a;color:#fff;border-radius:8px;padding:4px 12px;text-decoration:none;font-weight:700}
+.hero{background:linear-gradient(#064e3b,#065f46 60%,#0f172a);color:#fff;text-align:center;padding:44px 0 36px}
+body.hc .hero{background:#000;border-bottom:2px solid #fff}
+.badge{display:inline-block;background:#10b98133;color:#6ee7b7;border:1px solid #34d39966;border-radius:99px;padding:4px 14px;font-weight:600;font-size:.85rem}
+.hero h1{font-size:clamp(1.7rem,4.5vw,2.8rem);margin:14px auto;max-width:800px;line-height:1.15}
+.hero p{color:#d1fae5;max-width:680px;margin:0 auto 20px}
+.sb{display:flex;gap:6px;max-width:640px;margin:0 auto;background:#fff;border-radius:16px;padding:6px;box-shadow:0 10px 30px #0006}
+.sb input{flex:1;border:0;padding:10px 12px;font-size:1.05rem;background:transparent;color:#0f172a;min-width:0}
+.sb button{background:var(--g);color:#fff;border:0;border-radius:11px;padding:10px 22px;font-weight:700;cursor:pointer}
+.sb button:hover{background:var(--g2)}
+.cand{max-width:640px;margin:10px auto 0;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.chip{background:#ffffff1f;color:#fff;border:1px solid #ffffff33;border-radius:12px;padding:6px 14px;cursor:pointer;font-weight:600}
+.chip:hover{background:#ffffff38}.chip.on{background:#34d399;color:#064e3b}
+.quick{margin-top:14px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;align-items:center;font-size:.9rem}
+.sec{padding:34px 0}.sec.alt{background:#f1f5f9;border-block:1px solid var(--line)}
+body.hc .sec.alt{background:#000}
+.tag{color:var(--g2);font-weight:800;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase}
+h2{font-size:1.7rem;margin:2px 0 4px}
+.msg{background:#ecfdf5;color:#065f46;border-radius:10px;padding:8px 14px;font-weight:600;margin:10px 0}
+body.hc .msg{background:#000;border:2px solid #fff;color:#fff}
+.split{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:20px;align-items:start}
+@media(max-width:860px){.split{grid-template-columns:minmax(0,1fr)}}
+.mapb{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:0 4px 14px #0001}
+#map{height:520px;border-radius:12px;z-index:1}
+.leg{display:flex;flex-wrap:wrap;gap:10px;font-size:.8rem;color:var(--mut);padding:8px 4px 0}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.cats button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:600}
+.cats button[aria-pressed=true]{background:var(--g);color:#fff;border-color:var(--g)}
+#cards{display:flex;flex-direction:column;gap:10px;max-height:560px;overflow:auto;padding-right:4px}
+.rc{background:var(--card);border:1px solid var(--line);border-inline-start:5px solid var(--c);border-radius:12px;padding:10px 14px}
+.rc h3{margin:0 0 2px;font-size:1rem}.rc small{color:var(--mut)}
+.km{float:inline-end;background:#ecfdf5;color:#065f46;border-radius:99px;padding:1px 10px;font-weight:700;font-size:.8rem;margin-inline-start:8px}
+body.hc .km{background:#000;border:1px solid #fff;color:#fff}
+.cardsg{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:12px}
+.ac{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-decoration:none;color:var(--ink);display:block}
+.ac:hover{border-color:var(--g);box-shadow:0 4px 14px #0002}
+.ac i{font-size:1.4rem;color:var(--g);display:block;margin-bottom:6px}.ac b{display:block}.ac span{font-size:.8rem;color:var(--g2)}
+.aids{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:12px}
+@media(max-width:860px){.aids{grid-template-columns:1fr}}
+.al{display:flex;flex-direction:column;gap:6px;max-height:440px;overflow:auto}
+.al button{text-align:start;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;font-weight:600}
+.al button[aria-pressed=true]{background:var(--g);color:#fff;border-color:var(--g)}
+.dt{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;min-height:220px;box-shadow:0 4px 14px #0001}
+.dt h3{margin-top:0;color:var(--g2)}
+.btn{display:inline-block;background:var(--g);color:#fff;text-decoration:none;border-radius:10px;padding:9px 18px;font-weight:700}
+.note{font-size:.82rem;color:var(--mut);margin-top:12px}
+footer{background:#0f172a;color:#cbd5e1;text-align:center;padding:20px 16px}
+footer img{height:31px;vertical-align:middle;margin-right:8px}footer a{color:#fff}
+.cats select,.cats input{border:1px solid var(--line);border-radius:10px;padding:7px 10px;background:var(--card);color:var(--ink);flex:1 1 100%;min-width:0;max-width:100%;text-overflow:ellipsis}
+.leg{display:block}
+.needs{margin-bottom:10px}.needs b{display:block;margin-bottom:6px}#needs{display:flex;flex-wrap:wrap;gap:6px}
+.nb{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:600}
+.nb[aria-pressed=true]{background:var(--g);color:#fff;border-color:var(--g)}
+.msg[hidden]{display:none}#help{display:flex;gap:10px;align-items:center;flex-wrap:wrap}#help .btn{padding:4px 14px}
+.rc .acts{margin-top:8px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:.85rem}
+.rc button{background:none;border:1px solid var(--line);border-radius:8px;padding:2px 10px;cursor:pointer;color:var(--ink)}
+.priv{max-width:800px;margin:10px auto 0;text-align:start;font-size:.85rem}.priv summary{cursor:pointer;color:#fff;font-weight:600}
+body.easy{font-size:1.2rem;line-height:1.9;letter-spacing:.02em}
+body.easy .band,body.easy .tag,body.easy #leg,body.easy #dirs,body.easy #t_dirs,body.easy .cats input,body.easy #t_note,body.easy #t_kw{display:none}
+body.easy .rc{padding:16px 18px}
+#seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.qe{position:fixed;right:12px;bottom:12px;z-index:3000;background:#b91c1c;color:#fff;border:2px solid #fff;border-radius:99px;padding:10px 16px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px #0006}
+.first{background:#fffbeb;border:2px solid var(--am);border-radius:14px;padding:12px 16px;margin:10px 0}
+.first h3{margin:0 0 4px}.first .rc{margin-top:8px}.acts2{margin-bottom:8px}
+body.hc .first{background:#000}
+@media print{.top,nav,.band,.hero,#alertes,#ajudes,#sobre,.priv,#map,.mapb,#seg,.needs,.cats,.acts,.acts2,.sb,#help,.qe,#leg{display:none!important}#cards{max-height:none;overflow:visible}.split{display:block}body{background:#fff}}
+.hero{padding:30px 0 26px}
+.msg{margin:6px 0}
+.first{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;padding:10px 14px;margin:8px 0}
+.first h3,.first>p{grid-column:1/-1;margin:0}.first>p{font-size:.88rem}.first .rc{margin:0}
+.tb{margin:6px 0 10px}#seg{margin-bottom:8px}
+.needs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}.needs b{display:inline;margin:0}
+#t_kw{font-size:.75rem;margin:2px 0 8px}
+.cats{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px;margin:0}
+.cats select,.cats input{width:100%;flex:none}
+.mapb{position:sticky;top:70px}
+#map{height:min(560px,calc(100vh - 240px));min-height:320px}
+#cards{max-height:none;height:min(650px,calc(100vh - 150px));min-height:380px;gap:8px}
+.rc{padding:8px 12px;font-size:.9rem;line-height:1.35}.rc h3{font-size:.95rem}
+.rc .acts{margin-top:5px;gap:8px}.rc button{padding:2px 8px}
+.rc .bt{display:none}body.easy .rc .bt{display:inline}
+.leg{font-size:.72rem}
+@media(max-width:860px){.mapb{position:static}#map{height:320px}#cards{height:auto;max-height:60vh;min-height:0}.cats{grid-template-columns:1fr}.first{grid-template-columns:1fr}}
+@media print{.tb{display:none!important}}
+.cats{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto auto}
+@media(max-width:860px){.cats{grid-template-columns:1fr}}
+
+/* Millores d'usabilitat tàctil per a mòbil */
+@media (max-width: 860px) {
+  .nb, .chip, nav a, .acts button, .acts a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sb input { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+<button id="qe" class="qe"><i class="fa-solid fa-person-running"></i> <span id="t_qe"></span></button>
+<div class="top"><div class="w">
+  <div class="em"><b><i class="fa-solid fa-phone-volume"></i> <span id="t_em"></span></b>
+    <a href="tel:112" style="background:#dc2626">112</a>
+    <a href="tel:061" style="background:#2563eb">061 Salut</a>
+    <a href="tel:024" style="background:#7c3aed">024</a>
+    <a href="tel:016" style="background:#b45309">016</a></div>
+  <div class="tl">
+    <button id="fm" aria-label="A−">A−</button><button id="fp" aria-label="A+">A+</button>
+    <button id="hc" aria-pressed="false"><i class="fa-solid fa-circle-half-stroke"></i> <span id="t_hc"></span></button>
+    <button id="rd"><i class="fa-solid fa-volume-high"></i> <span id="t_rd"></span></button><button id="ez" aria-pressed="false"><i class="fa-solid fa-book-open"></i> <span id="t_ez"></span></button><i class="fa-solid fa-globe"></i>
+    <select id="lang" aria-label="Language"><option value="ca">Català</option><option value="es">Castellano</option><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select>
+  </div></div></div>
+
+<div class="brand"><div class="w">
+  <img src="img/logo-afronta-grafo-uab.png" alt="AFRONTA · GRAFO · Universitat Autònoma de Barcelona">
+  <img src="img/MICINN_Gob_AEI.jpg" alt="Gobierno de España · Ministerio de Ciencia e Innovación · Agencia Estatal de Investigación">
+</div></div>
+
+<nav><div class="w">
+  <a href="#mapa"><i class="fa-solid fa-map-location-dot"></i><span id="n1"></span></a>
+  <a href="#alertes"><i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b"></i><span id="n2"></span></a>
+  <a href="#ajudes"><i class="fa-solid fa-file-invoice-dollar" style="color:#2563eb"></i><span id="n3"></span></a>
+<a href="#sobre"><i class="fa-solid fa-circle-info" style="color:#64748b"></i><span id="n4"></span></a>
+</div></nav>
+
+<div class="band"><div class="w"><span><i class="fa-solid fa-bell"></i> <span id="t_band"></span></span><a href="#alertes" id="t_bandl"></a></div></div>
+
+<section class="hero"><div class="w">
+  <span class="badge"><i class="fa-solid fa-shield-heart"></i> <span id="t_badge"></span></span>
+  <h1 id="t_h1"></h1><p id="t_hp"></p>
+  <form class="sb" id="sf" role="search"><input id="q" type="text" autocomplete="off" list="dl"><datalist id="dl"></datalist><button type="submit" id="t_go"></button></form>
+  <div class="cand" id="cand"></div>
+  <div class="quick"><span id="t_quick"></span><span id="quick"></span><button type="button" class="chip" id="geo"><i class="fa-solid fa-location-crosshairs"></i> <span id="t_geo"></span></button></div>
+</div></section>
+
+<section class="sec" id="mapa"><div class="w">
+  <span class="tag" id="t_tag1"></span><h2 id="t_h2a"></h2>
+  <div class="msg" id="msg" aria-live="polite"></div>
+  <div id="first" class="first" hidden></div>
+  <div class="tb">
+    <div id="seg"></div>
+    <div class="needs" id="needsb"><b id="t_need"></b><div id="needs"></div></div>
+    <p class="note" id="t_kw"></p>
+    <div class="msg" id="help" hidden></div>
+    <div class="cats"><select id="ft" aria-label="Tipologia"><option value=""></option></select><input id="fq" type="text"><button class="nb" id="cl"><i class="fa-solid fa-eraser"></i> <span id="t_cl"></span></button><button class="nb" id="pr"><i class="fa-solid fa-print"></i> <span id="t_pr"></span></button></div>
+  </div>
+  <div class="split">
+    <div class="mapb"><div id="map" role="application" aria-label="Map"></div>
+      <div class="leg" id="leg"></div></div>
+    <div id="cards" tabindex="0"></div>
+  </div>
+  <p class="note" id="t_note"></p><h3 id="t_dirs" style="margin-top:22px"></h3><div class="cardsg" id="dirs"></div>
+</div></section>
+
+<section class="sec alt" id="alertes"><div class="w">
+  <span class="tag" id="t_tag2"></span><h2 id="t_h2b"></h2><p id="t_pb" style="color:var(--mut)"></p>
+  <div class="cardsg" id="alerts"></div>
+  <h2 style="margin-top:26px" id="t_news"></h2>
+  <div class="cardsg" id="news"></div>
+</div></section>
+
+<section class="sec" id="ajudes"><div class="w">
+  <span class="tag" id="t_tag3"></span><h2 id="t_h2c"></h2>
+  <div class="aids"><div class="al" id="al"></div><div class="dt" id="dt" aria-live="polite"></div></div>
+</div></section>
+
+<section class="sec alt" id="sobre"><div class="w"><span class="tag" id="t_tag4"></span><h2 id="t_ab_h"></h2><p id="t_ab1"></p><p id="t_ab2"></p><p id="t_ab2b"></p><p class="note" id="t_ab3"></p></div></section>
+<footer>
+  <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ca"><img src="img/Cc_by-nc-nd_icon.svg" alt="Creative Commons BY-NC-ND"></a>
+  Proyecto AFRONTA - PID2022-139502OB-I00
+<details class="priv"><summary id="t_priv_h"></summary><p id="t_priv"></p><p id="t_priv2"></p></details>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+const I={
+ca:{em:"Urgències gratuïtes",hc:"Contrast",n:["Mapa de recursos","Alertes i notícies","Ajudes públiques"],
+band:"Consulta els avisos oficials de temps i energia abans de sortir.",bandl:"Veure alertes",badge:"Dades oficials de la Generalitat",
+h1:"Recursos essencials a l'abast de totes les famílies",hp:"Escriu el teu municipi de Catalunya i et mostrarem els serveis socials registrats oficialment a la teva localitat o als municipis més propers.",
+ph:"El teu municipi (p. ex. Vic, Cervera, Salou…)",go:"Cerca",quick:"Accés ràpid:",
+tag1:"Cercador per municipi",h2a:"Mapa interactiu de serveis socials",
+ready:"Escriu el teu municipi i prem «Cerca» per veure els serveis socials registrats més propers.",ld:"Carregant dades oficials…",
+nm:"No hem trobat aquest municipi. Tria'n un de la llista desplegable.",er:"No s'han pogut carregar les dades oficials. Comprova la connexió i torna-ho a provar.",
+ownm:t=>`Serveis socials registrats a ${t}`,farm:t=>`A ${t} no hi ha serveis registrats. Et mostrem els dels municipis més propers, amb la distància aproximada.`,
+all:"Totes les tipologies",fph:"Filtra per nom, tipus o adreça (Intro)",cnt:(a,b)=>`Mostrant ${a} de ${b} serveis`,loc:"A la localitat",tel:"Tel.",cap:"Capacitat",
+src:"Font: Registre d'entitats, serveis i establiments socials · Dades Obertes de la Generalitat de Catalunya. Els punts del mapa marquen el centre de cada municipi, no l'adreça exacta.",
+note:"Totes les dades de serveis socials provenen en directe del registre oficial. Verifica sempre horaris i disponibilitat amb el servei abans d'anar-hi.",
+dirs:"Altres directoris oficials: salut, educació, menjar i orientació jurídica",dl:["Centres de salut i serveis sanitaris","Centres educatius i formació","Banc dels Aliments","Justícia gratuïta i orientació jurídica"],
+open:"Web oficial",tag2:"Avisos oficials i notícies",h2b:"Alertes climàtiques, ambientals i energètiques",pb:"Enllaços directes a les fonts oficials, sempre actualitzades.",news:"Notícies i canvis en polítiques socials",
+tag3:"Guia d'ajudes",h2c:"A quines ajudes públiques tens dret?",pickA:"Selecciona una ajuda de la llista.",more:"Més informació i sol·licitud"},
+es:{em:"Urgencias gratuitas",hc:"Contraste",n:["Mapa de recursos","Alertas y noticias","Ayudas públicas"],
+band:"Consulta los avisos oficiales de tiempo y energía antes de salir.",bandl:"Ver alertas",badge:"Datos oficiales de la Generalitat",
+h1:"Recursos esenciales al alcance de todas las familias",hp:"Escribe tu municipio de Cataluña y te mostraremos los servicios sociales registrados oficialmente en tu localidad o en los municipios más cercanos.",
+ph:"Tu municipio (p. ej. Vic, Cervera, Salou…)",go:"Buscar",quick:"Acceso rápido:",
+tag1:"Buscador por municipio",h2a:"Mapa interactivo de servicios sociales",
+ready:"Escribe tu municipio y pulsa «Buscar» para ver los servicios sociales registrados más cercanos.",ld:"Cargando datos oficiales…",
+nm:"No hemos encontrado ese municipio. Elige uno de la lista desplegable.",er:"No se han podido cargar los datos oficiales. Comprueba la conexión e inténtalo de nuevo.",
+ownm:t=>`Servicios sociales registrados en ${t}`,farm:t=>`En ${t} no hay servicios registrados. Te mostramos los de los municipios más cercanos, con la distancia aproximada.`,
+all:"Todas las tipologías",fph:"Filtra por nombre, tipo o dirección (Intro)",cnt:(a,b)=>`Mostrando ${a} de ${b} servicios`,loc:"En la localidad",tel:"Tel.",cap:"Capacidad",
+src:"Fuente: Registre d'entitats, serveis i establiments socials · Datos Abiertos de la Generalitat de Catalunya. Los puntos del mapa marcan el centro de cada municipio, no la dirección exacta.",
+note:"Todos los datos de servicios sociales proceden en directo del registro oficial. Verifica siempre horarios y disponibilidad con el servicio antes de ir.",
+dirs:"Otros directorios oficiales: salud, educación, alimentación y orientación jurídica",dl:["Centros de salud y servicios sanitarios","Centros educativos y formación","Banco de Alimentos","Justicia gratuita y orientación jurídica"],
+open:"Web oficial",tag2:"Avisos oficiales y noticias",h2b:"Alertas climáticas, ambientales y energéticas",pb:"Enlaces directos a las fuentes oficiales, siempre actualizadas.",news:"Noticias y cambios en políticas sociales",
+tag3:"Guía de ayudas",h2c:"¿A qué ayudas públicas tienes derecho?",pickA:"Selecciona una ayuda de la lista.",more:"Más información y solicitud"},
+en:{em:"Free emergency lines",hc:"Contrast",n:["Resource map","Alerts and news","Public benefits"],
+band:"Check the official weather and energy alerts before going out.",bandl:"See alerts",badge:"Official Generalitat data",
+h1:"Essential resources within reach of every family",hp:"Type your municipality in Catalonia and we will show the officially registered social services in your town or the nearest municipalities.",
+ph:"Your municipality (e.g. Vic, Cervera, Salou…)",go:"Search",quick:"Quick access:",
+tag1:"Search by municipality",h2a:"Interactive map of social services",
+ready:"Type your municipality and press “Search” to see the nearest registered social services.",ld:"Loading official data…",
+nm:"We could not find that municipality. Pick one from the drop-down list.",er:"The official data could not be loaded. Check your connection and try again.",
+ownm:t=>`Registered social services in ${t}`,farm:t=>`No services are registered in ${t}. Showing those in the nearest municipalities, with approximate distance.`,
+all:"All types",fph:"Filter by name, type or address (Enter)",cnt:(a,b)=>`Showing ${a} of ${b} services`,loc:"In town",tel:"Tel.",cap:"Capacity",
+src:"Source: Registre d'entitats, serveis i establiments socials · Open Data of the Generalitat de Catalunya. Map points mark each municipality's centre, not the exact address.",
+note:"All social-service data comes live from the official register. Always check opening hours and availability with the service before going.",
+dirs:"Other official directories: health, education, food and legal advice",dl:["Health centres and services","Schools and training","Food Bank","Free legal aid and advice"],
+open:"Official website",tag2:"Official alerts and news",h2b:"Weather, environmental and energy alerts",pb:"Direct links to the official, always up-to-date sources.",news:"News and changes in social policy",
+tag3:"Benefits guide",h2c:"Which public benefits are you entitled to?",pickA:"Select a benefit from the list.",more:"More information and how to apply"}};
+
+Object.assign(I.ca,{easy:"Lectura fàcil",easyhp:"Escriu el nom del teu poble o ciutat. Et direm on pots trobar ajuda.",rd:"Llegir en veu alta",need:"Què necessites?",
+nd:["Menjar","Allotjament","Violència de gènere","Infància i adolescència","Gent gran","Discapacitat","Salut mental","Ajuda a domicili"],
+kw:"La cerca per necessitat utilitza paraules clau de la tipologia oficial; si no trobes el que busques, prova el filtre per text.",
+hl:{viol:"Si estàs en perill immediat, truca al 112. El 016 és la línia d'atenció a les víctimes de violència masclista, gratuïta i oberta 24 hores.",inf:"El 116 111 és la línia d'ajuda a la infància i l'adolescència (ANAR), gratuïta.",salm:"El 024 és la línia d'atenció a la conducta suïcida, gratuïta i oberta 24 hores."},
+route:"Com arribar-hi",listen:"Escolta",upd:(a,b)=>`Consultat el ${a}`+(b?` · Registre actualitzat el ${b}`:""),
+priv_h:"Privacitat i ús de dades",priv:"Aquesta pàgina no té formularis, no demana dades personals i no desa res de la teva consulta. El municipi que escrius només s'utilitza al teu navegador per consultar dades obertes. Per funcionar, carrega serveis de tercers (Dades Obertes de la Generalitat, mapa de l'ICGC i biblioteques de cdnjs), que poden registrar la teva adreça IP com qualsevol web. Si prems «Com arribar-hi», s'obre Google Maps, que té la seva pròpia política de privacitat."});
+Object.assign(I.es,{easy:"Lectura fácil",easyhp:"Escribe el nombre de tu pueblo o ciudad. Te diremos dónde puedes encontrar ayuda.",rd:"Leer en voz alta",need:"¿Qué necesitas?",
+nd:["Alimentación","Alojamiento","Violencia de género","Infancia y adolescencia","Personas mayores","Discapacidad","Salud mental","Ayuda a domicilio"],
+kw:"La búsqueda por necesidad usa palabras clave de la tipología oficial; si no encuentras lo que buscas, prueba el filtro por texto.",
+hl:{viol:"Si estás en peligro inmediato, llama al 112. El 016 es la línea de atención a víctimas de violencia machista, gratuita y abierta 24 horas.",inf:"El 116 111 es la línea de ayuda a la infancia y la adolescencia (ANAR), gratuita.",salm:"El 024 es la línea de atención a la conducta suicida, gratuita y abierta 24 horas."},
+route:"Cómo llegar",listen:"Escuchar",upd:(a,b)=>`Consultado el ${a}`+(b?` · Registro actualizado el ${b}`:""),
+priv_h:"Privacidad y uso de datos",priv:"Esta página no tiene formularios, no pide datos personales y no guarda nada de tu consulta. El municipio que escribes solo se usa en tu navegador para consultar datos abiertos. Para funcionar carga servicios de terceros (Datos Abiertos de la Generalitat, mapa del ICGC y librerías de cdnjs), que pueden registrar tu dirección IP como cualquier web. Si pulsas «Cómo llegar», se abre Google Maps, que tiene su propia política de privacidad."});
+Object.assign(I.en,{easy:"Easy read",easyhp:"Write the name of your town or city. We will tell you where to find help.",rd:"Read aloud",need:"What do you need?",
+nd:["Food","Housing","Gender violence","Children and teens","Older people","Disability","Mental health","Home help"],
+kw:"Search by need uses keywords from the official service type; if you do not find what you need, try the text filter.",
+hl:{viol:"If you are in immediate danger, call 112. 016 is the helpline for victims of gender-based violence, free and open 24 hours.",inf:"116 111 is the helpline for children and teenagers (ANAR), free of charge.",salm:"024 is the suicidal-behaviour helpline, free and open 24 hours."},
+route:"Directions",listen:"Listen",upd:(a,b)=>`Checked on ${a}`+(b?` · Register updated on ${b}`:""),
+priv_h:"Privacy and data use",priv:"This page has no forms, asks for no personal data and stores nothing about your search. The municipality you type is only used in your browser to query open data. To work, it loads third-party services (Generalitat Open Data, ICGC map and cdnjs libraries), which may log your IP address like any website. If you press “Directions”, Google Maps opens, with its own privacy policy."});
+I.fr={em:"Urgences gratuites",hc:"Contraste",n:["Carte des ressources","Alertes et actualités","Aides publiques"],band:"Consultez les avis officiels météo et énergie avant de sortir.",bandl:"Voir les alertes",badge:"Données officielles de la Generalitat",h1:"Des ressources essentielles à la portée de toutes les familles",hp:"Écrivez votre commune en Catalogne : nous vous montrerons les services sociaux officiellement enregistrés dans votre localité ou les communes les plus proches.",ph:"Votre commune (ex. Vic, Cervera, Salou…)",go:"Rechercher",quick:"Accès rapide :",tag1:"Recherche par commune",h2a:"Carte interactive des services sociaux",ready:"Écrivez votre commune et appuyez sur « Rechercher » pour voir les services sociaux enregistrés les plus proches.",ld:"Chargement des données officielles…",nm:"Commune introuvable. Choisissez-en une dans la liste déroulante.",er:"Impossible de charger les données officielles. Vérifiez votre connexion et réessayez.",
+ownm:t=>`Services sociaux enregistrés à ${t}`,farm:t=>`Aucun service enregistré à ${t}. Voici ceux des communes les plus proches, avec la distance approximative.`,all:"Tous les types",fph:"Filtrer par nom, type ou adresse (Entrée)",cnt:(a,b)=>`Affichage de ${a} sur ${b} services`,loc:"Sur place",tel:"Tél.",cap:"Capacité",
+src:"Source : Registre d'entitats, serveis i establiments socials · Données ouvertes de la Generalitat de Catalunya. Les points de la carte indiquent le centre de chaque commune, pas l'adresse exacte.",note:"Toutes les données sur les services sociaux proviennent en direct du registre officiel. Vérifiez toujours les horaires et la disponibilité auprès du service avant de vous déplacer.",
+dirs:"Autres annuaires officiels : santé, éducation, alimentation et conseil juridique",dl:["Centres et services de santé","Écoles et formation","Banque alimentaire","Aide juridictionnelle et conseil juridique"],open:"Site officiel",tag2:"Alertes officielles et actualités",h2b:"Alertes météo, environnementales et énergétiques",pb:"Liens directs vers les sources officielles, toujours à jour.",news:"Actualités et changements des politiques sociales",tag3:"Guide des aides",h2c:"À quelles aides publiques avez-vous droit ?",pickA:"Sélectionnez une aide dans la liste.",more:"Plus d'informations et demande",
+easy:"Lecture facile",easyhp:"Écris le nom de ta ville ou de ton village. Nous te dirons où trouver de l'aide.",rd:"Lire à voix haute",need:"De quoi avez-vous besoin ?",nd:["Alimentation","Hébergement","Violences de genre","Enfance et adolescence","Personnes âgées","Handicap","Santé mentale","Aide à domicile"],
+kw:"La recherche par besoin utilise des mots-clés du type de service officiel ; si vous ne trouvez pas ce que vous cherchez, essayez le filtre texte.",
+hl:{viol:"En danger immédiat, appelez le 112. Le 016 est la ligne d'aide aux victimes de violences de genre, gratuite et ouverte 24 h/24.",inf:"Le 116 111 est la ligne d'aide à l'enfance et à l'adolescence (ANAR), gratuite.",salm:"Le 024 est la ligne d'aide en cas de conduite suicidaire, gratuite et ouverte 24 h/24."},
+route:"Itinéraire",listen:"Écouter",upd:(a,b)=>`Consulté le ${a}`+(b?` · Registre mis à jour le ${b}`:""),
+priv_h:"Confidentialité et utilisation des données",priv:"Cette page n'a pas de formulaires, ne demande aucune donnée personnelle et ne conserve rien de votre recherche. La commune saisie n'est utilisée que dans votre navigateur pour consulter des données ouvertes. Pour fonctionner, elle charge des services tiers (données ouvertes de la Generalitat, carte de l'ICGC et bibliothèques cdnjs), qui peuvent enregistrer votre adresse IP comme tout site web. Si vous appuyez sur « Itinéraire », Google Maps s'ouvre, avec sa propre politique de confidentialité."};
+I.ar={em:"خطوط الطوارئ المجانية",hc:"التباين",n:["خريطة الموارد","تنبيهات وأخبار","المساعدات العامة"],band:"راجع التنبيهات الرسمية للطقس والطاقة قبل الخروج.",bandl:"عرض التنبيهات",badge:"بيانات رسمية من حكومة كتالونيا",h1:"موارد أساسية في متناول جميع الأسر",hp:"اكتب اسم بلديتك في كتالونيا وسنعرض لك الخدمات الاجتماعية المسجلة رسمياً في منطقتك أو في أقرب البلديات.",ph:"بلديتك (مثال: Vic، Cervera، Salou…)",go:"بحث",quick:"وصول سريع:",tag1:"البحث حسب البلدية",h2a:"خريطة تفاعلية للخدمات الاجتماعية",ready:"اكتب اسم بلديتك واضغط «بحث» لعرض أقرب الخدمات الاجتماعية المسجلة.",ld:"جارٍ تحميل البيانات الرسمية…",nm:"لم نجد هذه البلدية. اختر واحدة من القائمة المنسدلة.",er:"تعذّر تحميل البيانات الرسمية. تحقق من الاتصال وحاول مجدداً.",
+ownm:t=>`الخدمات الاجتماعية المسجلة في ${t}`,farm:t=>`لا توجد خدمات مسجلة في ${t}. نعرض لك خدمات أقرب البلديات مع المسافة التقريبية.`,all:"جميع الأنواع",fph:"صفِّ حسب الاسم أو النوع أو العنوان (Enter)",cnt:(a,b)=>`عرض ${a} من ${b} خدمة`,loc:"في البلدة",tel:"هاتف",cap:"السعة",
+src:"المصدر: Registre d'entitats, serveis i establiments socials · البيانات المفتوحة لحكومة كتالونيا. تشير نقاط الخريطة إلى مركز كل بلدية وليس إلى العنوان الدقيق.",note:"جميع بيانات الخدمات الاجتماعية تأتي مباشرة من السجل الرسمي. تحقق دائماً من المواعيد والتوفر مع الخدمة قبل الذهاب.",
+dirs:"أدلة رسمية أخرى: الصحة والتعليم والغذاء والاستشارة القانونية",dl:["مراكز وخدمات الصحة","المدارس والتدريب","بنك الطعام","المساعدة القانونية المجانية والإرشاد القانوني"],open:"الموقع الرسمي",tag2:"تنبيهات رسمية وأخبار",h2b:"تنبيهات الطقس والبيئة والطاقة",pb:"روابط مباشرة إلى المصادر الرسمية المحدَّثة دائماً.",news:"أخبار وتغييرات في السياسات الاجتماعية",tag3:"دليل المساعدات",h2c:"ما المساعدات العامة التي يحق لك الحصول عليها؟",pickA:"اختر مساعدة من القائمة.",more:"مزيد من المعلومات وطريقة الطلب",
+easy:"قراءة مبسطة",easyhp:"اكتب اسم مدينتك أو قريتك. سنقول لك أين تجد المساعدة.",rd:"قراءة بصوت عالٍ",need:"ماذا تحتاج؟",nd:["الغذاء","السكن","العنف القائم على النوع","الطفولة والمراهقة","كبار السن","الإعاقة","الصحة النفسية","المساعدة المنزلية"],
+kw:"يستخدم البحث حسب الحاجة كلمات مفتاحية من نوع الخدمة الرسمي؛ إن لم تجد ما تبحث عنه فجرّب تصفية النص.",
+hl:{viol:"إذا كنت في خطر فوري فاتصل بالرقم 112. الرقم 016 هو خط مساعدة ضحايا العنف القائم على النوع، مجاني ويعمل على مدار الساعة.",inf:"الرقم 116 111 هو خط مساعدة الأطفال والمراهقين (ANAR)، مجاني.",salm:"الرقم 024 هو خط الدعم في حالات السلوك الانتحاري، مجاني ويعمل على مدار الساعة."},
+route:"كيف أصل",listen:"استمع",upd:(a,b)=>`تمت الاستشارة في ${a}`+(b?` · تحديث السجل في ${b}`:""),
+priv_h:"الخصوصية واستخدام البيانات",priv:"لا تحتوي هذه الصفحة على نماذج ولا تطلب بيانات شخصية ولا تحفظ شيئاً من بحثك. تُستخدم البلدية التي تكتبها في متصفحك فقط للاستعلام عن البيانات المفتوحة. ولكي تعمل تحمّل خدمات من أطراف ثالثة (البيانات المفتوحة لحكومة كتالونيا وخريطة ICGC ومكتبات cdnjs) وقد تسجّل عنوان IP الخاص بك كأي موقع. عند الضغط على «كيف أصل» يُفتح Google Maps وله سياسة خصوصية خاصة به."};
+const AX={fr:[["Revenu minimum vital (IMV)","Prestation de l'État garantissant un revenu minimum aux ménages en situation de vulnérabilité."],["Bon social électricité et chauffage","Réductions sur la facture d'électricité et aide au chauffage pour les consommateurs vulnérables."],["Aides au loyer et au logement","Aides de la Generalitat et de l'État pour payer le loyer ou accéder à un logement."],["Pensions non contributives (PNC)","Pensions de retraite et d'invalidité pour les personnes sans cotisations suffisantes et à faibles revenus."],["Loi sur la dépendance : aperçu","Reconnaît le droit à des services et prestations pour les personnes ayant besoin d'aide pour leur autonomie."],["SAD · Aide à domicile","Soins personnels et tâches domestiques au domicile de la personne dépendante."],["Téléassistance","Dispositifs de réponse immédiate en cas d'urgence à domicile."],["Centres de jour et de nuit","Prise en charge complète de jour ou de nuit pour préserver l'autonomie."],["Soins en résidence","Places en résidences publiques ou conventionnées pour personnes âgées ou en situation de handicap severe."],["Prestations financières : PECE, PEVS, PEAA","PECE : soins dans le cadre familial. PEVS : aide liée au service s'il n'y a pas de place publique. PEAA : embaucher un assistant personnel."],["Hébergement d'urgence alternatif","Foyers et logements encadrés pour personnes sans domicile ou femmes victimes de violences de genre."],["Aides d'urgence sociale (AES)","Aides ponctuelles pour besoins de base urgents. Elles se demandent auprès des services sociaux de votre commune."]],
+ar:[["الدخل الأدنى الحيوي (IMV)","إعانة حكومية تضمن دخلاً أدنى للأسر في وضع هشاشة."],["القسيمة الاجتماعية للكهرباء والتدفئة","خصومات على فاتورة الكهرباء ودعم للتدفئة للمستهلكين الضعفاء."],["مساعدات الإيجار والسكن","مساعدات من حكومة الإقليم والدولة لدفع الإيجار أو الحصول على سكن."],["المعاشات غير الاشتراكية (PNC)","معاشات تقاعد وعجز للأشخاص الذين لا تتوفر لديهم اشتراكات كافية ودخلهم منخفض."],["قانون الاعتماد على الغير: نظرة عامة","يعترف بالحق في الخدمات والإعانات للأشخاص الذين يحتاجون إلى دعم لاستقلاليتهم الشخصية."],["المساعدة المنزلية (SAD)","رعاية شخصية ومهام منزلية في بيت الشخص المعتمد على الغير."],["المساعدة عن بُعد","أجهزة للاستجابة الفورية في حالات الطوارئ المنزلية."],["مراكز الرعاية النهارية والليلية","رعاية شاملة نهاراً أو ليلاً للحفاظ على الاستقلالية."],["الرعاية السكنية","أماكن في دور رعاية عامة أو متعاقد معها لكبار السن أو ذوي الإعاقة الشديدة."],["الإعانات المالية: PECE وPEVS وPEAA","PECE: الرعاية داخل الأسرة. PEVS: إعانة مرتبطة بالخدمة عند عدم توفر مكان عام. PEAA: توظيف مساعد شخصي."],["مأوى بديل للطوارئ","ملاجئ وشقق مدعومة للأشخاص بلا مأوى أو للنساء ضحايا العنف القائم على النوع."],["مساعدات الطوارئ الاجتماعية (AES)","مساعدات مؤقتة لتغطية الاحتياجات الأساسية العاجلة. تُطلب عبر الخدمات الاجتماعية في بلديتك."]]};
+Object.assign(I.ca,{srcs:["Serveis socials","Farmàcies i establiments sanitaris"],h2a:"Mapa interactiu de recursos locals",hp:"Escriu el teu municipi de Catalunya i et mostrarem els serveis socials i sanitaris oficials de la teva localitat o dels municipis més propers.",hm:(t,k)=>`Establiments sanitaris autoritzats a menys de ${k} km de ${t}`,hmain:"Hospitals i centres d'atenció (principals)",hsrc:"Font: Establiments sanitaris autoritzats a Catalunya · Dades Obertes de la Generalitat de Catalunya. Inclou farmàcies, òptiques, audiopròtesis, ortopèdies i farmacioles; no inclou hospitals ni centres d'atenció primària. Les ubicacions són les registrades oficialment."});
+Object.assign(I.es,{srcs:["Servicios sociales","Farmacias y establecimientos sanitarios"],h2a:"Mapa interactivo de recursos locales",hp:"Escribe tu municipio de Cataluña y te mostraremos los servicios sociales y sanitarios oficiales de tu localidad o de los municipios más cercanos.",hm:(t,k)=>`Establecimientos sanitarios autorizados a menos de ${k} km de ${t}`,hmain:"Hospitales y centros de atención (principales)",hsrc:"Fuente: Establiments sanitaris autoritzats a Catalunya · Datos Abiertos de la Generalitat de Catalunya. Incluye farmacias, ópticas, audioprótesis, ortopedias y botiquines; no incluye hospitales ni centros de atención primaria. Las ubicaciones son las registradas oficialmente."});
+Object.assign(I.en,{srcs:["Social services","Pharmacies and health establishments"],h2a:"Interactive map of local resources",hp:"Type your municipality in Catalonia and we will show the official social and health services in your town or the nearest municipalities.",hm:(t,k)=>`Authorised health establishments within ${k} km of ${t}`,hmain:"Hospitals and care centres (main)",hsrc:"Source: Establiments sanitaris autoritzats a Catalunya · Open Data of the Generalitat de Catalunya. Includes pharmacies, opticians, hearing-aid centres, orthopaedic shops and medicine cabinets; it does not include hospitals or primary-care centres. Locations are those officially registered."});
+Object.assign(I.fr,{srcs:["Services sociaux","Pharmacies et établissements de santé"],h2a:"Carte interactive des ressources locales",hp:"Écrivez votre commune en Catalogne : nous vous montrerons les services sociaux et de santé officiels de votre localité ou des communes les plus proches.",hm:(t,k)=>`Établissements de santé autorisés à moins de ${k} km de ${t}`,hmain:"Hôpitaux et centres de soins (principaux)",hsrc:"Source : Equipaments de Catalunya · Données ouvertes de la Generalitat de Catalunya."});
+Object.assign(I.ar,{srcs:["الخدمات الاجتماعية","الصيدليات والمنشآت الصحية"],h2a:"خريطة تفاعلية للموارد المحلية",hp:"اكتب اسم بلديتك في كتالونيا وسنعرض لك الخدمات الاجتماعية والصحية الرسمية في منطقتك أو في أقرب البلديات.",hm:(t,k)=>`منشآت صحية مرخصة على بعد أقل من ${k} كم من ${t}`,hmain:"المستشفيات ومراكز الرعاية (الرئيسية)",hsrc:"المصدر: Establiments sanitaris autoritzats a Catalunya · البيانات المفتوحة لحكومة كتالونيا."});
+Object.assign(I.ca,{srcs:["Serveis socials","Salut","Educació","Farmàcies i òptiques"],hmn:(t,k)=>`Resultats a menys de ${k} km de ${t}`,
+srcX:{sal:"Font: Equipaments de Catalunya (categoria Salut) · Dades Obertes de la Generalitat de Catalunya. Les ubicacions són les registrades oficialment.",edu:"Font: Directori de centres docents (curs vigent) · Dades Obertes de la Generalitat de Catalunya. Inclou centres públics i privats; la fila de nivells indica què s'hi ofereix."},
+lv:["Infantil 0-3 anys (1r cicle)","Infantil 3-6 anys (2n cicle)","Primària","ESO","Batxillerat","FP grau mitjà","FP grau superior","Educació especial","Formació d'adults"]});
+Object.assign(I.es,{srcs:["Servicios sociales","Salud","Educación","Farmacias y ópticas"],hmn:(t,k)=>`Resultados a menos de ${k} km de ${t}`,
+srcX:{sal:"Fuente: Equipaments de Catalunya (categoría Salud) · Datos Abiertos de la Generalitat de Catalunya. Las ubicaciones son las registradas oficialmente.",edu:"Fuente: Directori de centres docents (curso vigente) · Datos Abiertos de la Generalitat de Catalunya. Incluye centros públicos y privados; la fila de niveles indica qué se ofrece."},
+lv:["Infantil 0-3 años (1.er ciclo)","Infantil 3-6 años (2.º ciclo)","Primaria","ESO","Bachillerato","FP grado medio","FP grado superior","Educación especial","Formación de personas adultas"]});
+Object.assign(I.en,{srcs:["Social services","Health","Education","Pharmacies and opticians"],hmn:(t,k)=>`Results within ${k} km of ${t}`,
+srcX:{sal:"Source: Equipaments de Catalunya (Health category) · Open Data of the Generalitat de Catalunya. Locations are those officially registered.",edu:"Source: Directori de centres docents (current school year) · Open Data of the Generalitat de Catalunya. Includes public and private schools; the levels line shows what each offers."},
+lv:["Early years 0-3 (1st cycle)","Early years 3-6 (2nd cycle)","Primary","Compulsory secondary (ESO)","Upper secondary (Batxillerat)","Vocational training (intermediate)","Vocational training (higher)","Special education","Adult education"]});
+Object.assign(I.fr,{srcs:["Services sociaux","Santé","Éducation","Pharmacies et opticiens"],hmn:(t,k)=>`Résultats à moins de ${k} km de ${t}`,
+srcX:{sal:"Source : Equipaments de Catalunya (catégorie Santé) · Données ouvertes de la Generalitat de Catalunya. Les emplacements sont ceux enregistrés officiellement.",edu:"Source : Directori de centres docents (année scolaire en cours) · Données ouvertes de la Generalitat de Catalunya. Comprend les établissements publics et privés ; la ligne des niveaux indique ce qu'ils proposent."},
+lv:["Maternelle 0-3 ans (1er cycle)","Maternelle 3-6 ans (2e cycle)","Primaire","Collège (ESO)","Lycée (Batxillerat)","Formation professionnelle (niveau moyen)","Formation professionnelle (niveau supérieur)","Éducation spécialisée","Formation d'adultes"]});
+Object.assign(I.ar,{srcs:["الخدمات الاجتماعية","الصحة","التعليم","الصيدليات ومحلات النظارات"],hmn:(t,k)=>`النتائج على بعد أقل من ${k} كم من ${t}`,
+srcX:{sal:"المصدر: Equipaments de Catalunya (فئة الصحة) · البيانات المفتوحة لحكومة كتالونيا. المواقع هي المسجلة رسمياً.",edu:"المصدر: Directori de centres docents (العام الدراسي الحالي) · البيانات المفتوحة لحكومة كتالونيا. تشمل المدارس العامة والخاصة؛ وسطر المستويات يوضح ما تقدمه."},
+lv:["رياض الأطفال 0-3 سنوات","رياض الأطفال 3-6 سنوات","الابتدائي","الثانوي الإلزامي (ESO)","البكالوريا (Batxillerat)","التكوين المهني (متوسط)","التكوين المهني (عالٍ)","التربية الخاصة","تعليم الكبار"]});
+const REV="29/10/2026";
+Object.assign(I.ca,{qe:"Sortida ràpida",geo:"La meva ubicació",geoer:"No hem pogut obtenir la teva ubicació o no ets a Catalunya. Escriu el teu municipi.",ch:"Quin d'aquests?",
+fs_h:"El teu primer pas",fs_p:"Truca o demana cita al servei social bàsic del teu municipi o d'un de proper. És la porta d'entrada a la majoria d'ajudes socials.",cita:"Truca abans per demanar cita i confirmar l'horari: aquesta pàgina no el coneix.",call:"Truca",tit:"Titular",cp:"Copia",sh:"Comparteix",copied:"Copiat",pr:"Imprimeix",
+n4:"Sobre el projecte",tag4:"Transparència",ab_h:"Sobre aquest projecte",
+ab1:"Aquesta pàgina forma part del Proyecto AFRONTA (GRAFO, Universitat Autònoma de Barcelona). És informativa: no és un servei oficial de cap administració, no tramita ajudes i no substitueix l'assessorament de professionals dels serveis socials.",
+ab2:"Les dades de serveis, centres i equipaments es consulten en directe a les Dades Obertes de la Generalitat de Catalunya i poden contenir errors o estar desfasades. Els textos de la guia d'ajudes són resums orientatius: consulta sempre l'organisme oficial.",
+ab3:"Fonts: Registre d'entitats, serveis i establiments socials · Equipaments de Catalunya · Directori de centres docents · Establiments sanitaris autoritzats a Catalunya · Caps de municipi georeferenciats (Dades Obertes de la Generalitat) · Mapa base de l'ICGC · dades d'OpenStreetMap.",
+revd:"Text revisat el",
+priv2:"El botó «Sortida ràpida» et porta a un altre web, però no esborra l'historial del navegador: si comparteixes dispositiu, utilitza una finestra privada o esborra l'historial. Si prems «La meva ubicació», el navegador et demana permís i la posició només s'utilitza al teu navegador per triar el municipi més proper.",
+note:"Totes les dades de serveis provenen en directe de registres oficials. La titularitat (pública o privada) és la que consta al registre i no indica si el servei és gratuït: pregunta-ho al servei. Verifica sempre horaris i disponibilitat abans d'anar-hi."});
+Object.assign(I.es,{qe:"Salida rápida",geo:"Mi ubicación",geoer:"No hemos podido obtener tu ubicación o no estás en Cataluña. Escribe tu municipio.",ch:"¿Cuál de estos?",
+fs_h:"Tu primer paso",fs_p:"Llama o pide cita en el servicio social básico de tu municipio o de uno cercano. Es la puerta de entrada a la mayoría de las ayudas sociales.",cita:"Llama antes para pedir cita y confirmar el horario: esta página no lo conoce.",call:"Llamar",tit:"Titular",cp:"Copiar",sh:"Compartir",copied:"Copiado",pr:"Imprimir",
+n4:"Sobre el proyecto",tag4:"Transparencia",ab_h:"Sobre este proyecto",
+ab1:"Esta página forma parte del Proyecto AFRONTA (GRAFO, Universitat Autònoma de Barcelona). Es informativa: no es un servicio oficial de ninguna administración, no tramita ayudas y no sustituye el asesoramiento de profesionales de los servicios sociales.",
+ab2:"Los datos de servicios, centros y equipamientos se consultan en directo en los Datos Abiertos de la Generalitat de Catalunya y pueden contener errores o estar desactualizados. Los textos de la guía de ayudas son resúmenes orientativos: consulta siempre el organismo oficial.",
+ab3:"Fuentes: Registre d'entitats, serveis i establiments socials · Equipaments de Catalunya · Directori de centres docents · Establiments sanitaris autoritzats a Catalunya · Caps de municipi georeferenciats (Datos Abiertos de la Generalitat) · Mapa base del ICGC · datos de OpenStreetMap.",
+revd:"Texto revisado el",
+priv2:"El botón «Salida rápida» te lleva a otra web, pero no borra el historial del navegador: si compartes dispositivo, usa una ventana privada o borra el historial. Si pulsas «Mi ubicación», el navegador te pide permiso y la posición solo se usa en tu navegador para elegir el municipio más cercano.",
+note:"Todos los datos de servicios proceden en directo de registros oficiales. La titularidad (pública o privada) es la que consta en el registro y no indica si el servicio es gratuito: pregúntalo al servicio. Verifica siempre horarios y disponibilidad antes de ir."});
+Object.assign(I.en,{qe:"Quick exit",geo:"My location",geoer:"We could not get your location, or you are not in Catalonia. Type your municipality.",ch:"Which one?",
+fs_h:"Your first step",fs_p:"Call or book an appointment at the basic social service of your municipality or a nearby one. It is the entry point to most social assistance.",cita:"Call first to book an appointment and confirm opening hours: this page does not know them.",call:"Call",tit:"Owner",cp:"Copy",sh:"Share",copied:"Copied",pr:"Print",
+n4:"About the project",tag4:"Transparency",ab_h:"About this project",
+ab1:"This page is part of Proyecto AFRONTA (GRAFO, Universitat Autònoma de Barcelona). It is informational: it is not an official service of any administration, does not process benefit applications and does not replace advice from social-services professionals.",
+ab2:"Data on services, centres and facilities is queried live from the Generalitat de Catalunya Open Data and may contain errors or be out of date. The benefits guide texts are indicative summaries: always check the official body.",
+ab3:"Sources: Registre d'entitats, serveis i establiments socials · Equipaments de Catalunya · Directori de centres docents · Establiments sanitaris autoritzats a Catalunya · Caps de municipi georeferenciats (Generalitat Open Data) · ICGC base map · OpenStreetMap data.",
+revd:"Text reviewed on",
+priv2:"The “Quick exit” button takes you to another website but does not clear your browser history: if you share a device, use a private window or clear the history. If you press “My location”, the browser asks for permission and the position is only used in your browser to pick the nearest municipality.",
+note:"All service data comes live from official registers. Ownership (public or private) is as recorded in the register and does not say whether the service is free: ask the service. Always check opening hours and availability before going."});
+Object.assign(I.fr,{qe:"Sortie rapide",geo:"Ma position",geoer:"Nous n'avons pas pu obtenir votre position, ou vous n'êtes pas en Catalogne. Écrivez votre commune.",ch:"Lequel ?",
+fs_h:"Votre première démarche",fs_p:"Appelez ou prenez rendez-vous au service social de base de votre commune ou d'une commune proche. C'est la porte d'entrée de la plupart des aides sociales.",cita:"Appelez d'abord pour prendre rendez-vous et confirmer les horaires : cette page ne les connaît pas.",call:"Appeler",tit:"Titulaire",cp:"Copier",sh:"Partager",copied:"Copié",pr:"Imprimer",
+n4:"À propos du projet",tag4:"Transparence",ab_h:"À propos de ce projet",
+ab1:"Cette page fait partie du Proyecto AFRONTA (GRAFO, Universitat Autònoma de Barcelona). Elle est informative : ce n'est pas un service officiel d'une administration, elle ne traite pas les demandes d'aides et ne remplace pas les conseils des professionnels des services sociaux.",
+ab2:"Les données sur les services, centres et équipements sont consultées en direct dans les données ouvertes de la Generalitat de Catalunya et peuvent contenir des erreurs ou être obsolètes. Les textes du guide des aides sont des résumés indicatifs : consultez toujours l'organisme officiel.",
+ab3:"Sources : Registre d'entitats, serveis i establiments socials · Equipaments de Catalunya · Directori de centres docents · Establiments sanitaris autoritzats a Catalunya · Caps de municipi georeferenciats (données ouvertes de la Generalitat) · fond de carte de l'ICGC · données OpenStreetMap.",
+revd:"Texte révisé le",
+priv2:"Le bouton « Sortie rapide » vous mène vers un autre site mais n'efface pas l'historique du navigateur : si vous partagez un appareil, utilisez une fenêtre privée ou effacez l'historique. Si vous appuyez sur « Ma position », le navigateur demande l'autorisation et la position n'est utilisée que dans votre navigateur pour choisir la commune la plus proche.",
+note:"Toutes les données sur les services proviennent en direct de registres officiels. Le statut (public ou privé) est celui du registre et n'indique pas si le service est gratuit : renseignez-vous auprès du service. Vérifiez toujours les horaires et la disponibilité avant de vous déplacer."});
+Object.assign(I.ar,{qe:"خروج سريع",geo:"موقعي",geoer:"تعذّر تحديد موقعك أو أنك لست في كتالونيا. اكتب اسم بلديتك.",ch:"أيٌّ منها؟",
+fs_h:"خطوتك الأولى",fs_p:"اتصل أو احجز موعداً في الخدمة الاجتماعية الأساسية في بلديتك أو في بلدية قريبة. إنها بوابة الدخول إلى معظم المساعدات الاجتماعية.",cita:"اتصل أولاً لحجز موعد وتأكيد ساعات العمل: هذه الصفحة لا تعرفها.",call:"اتصل",tit:"الجهة المالكة",cp:"نسخ",sh:"مشاركة",copied:"تم النسخ",pr:"طباعة",
+n4:"عن المشروع",tag4:"الشفافية",ab_h:"عن هذا المشروع",
+ab1:"هذه الصفحة جزء من Proyecto AFRONTA (GRAFO، جامعة برشلونة المستقلة). هي صفحة إعلامية: ليست خدمة رسمية لأي إدارة، ولا تعالج طلبات المساعدات، ولا تحل محل استشارة المختصين في الخدمات الاجتماعية.",
+ab2:"يتم الاستعلام عن بيانات الخدمات والمراكز والمرافق مباشرة من البيانات المفتوحة لحكومة كتالونيا وقد تحتوي على أخطاء أو تكون قديمة. نصوص دليل المساعدات ملخصات إرشادية: راجع دائماً الجهة الرسمية.",
+ab3:"المصادر: Registre d'entitats, serveis i establiments socials · Equipaments de Catalunya · Directori de centres docents · Establiments sanitaris autoritzats a Catalunya · Caps de municipi georeferenciats (البيانات المفتوحة لحكومة كتالونيا) · خريطة ICGC الأساسية · بيانات OpenStreetMap.",
+revd:"تمت مراجعة النص في",
+priv2:"زر «خروج سريع» ينقلك إلى موقع آخر لكنه لا يمحو سجل المتصفح: إذا كنت تشارك الجهاز فاستخدم نافذة خاصة أو امسح السجل. وإذا ضغطت «موقعي» يطلب المتصفح إذناً ولا يُستخدم الموقع إلا داخل متصفحك لاختيار أقرب بلدية.",
+note:"جميع بيانات الخدمات تأتي مباشرة من سجلات رسمية. الجهة المالكة (عامة أو خاصة) كما هي في السجل ولا تعني أن الخدمة مجانية: اسأل الخدمة. تحقق دائماً من المواعيد والتوفر قبل الذهاب."});
+Object.assign(I.ca,{cl:"Neteja filtres",fbm:t=>`Cap servei amb aquest filtre a ${t}. Et mostrem els dels municipis més propers, amb la distància aproximada.`,nores:"No s'ha trobat cap servei amb aquest filtre. Prova amb «Neteja filtres» o canvia la cerca.",ab2b:"Per corregir una dada, cal adreçar-se a l'organisme que gestiona el registre corresponent (serveis socials, salut, educació, etc.): aquesta pàgina només en mostra el contingut i no el pot modificar."});
+Object.assign(I.es,{cl:"Limpiar filtros",fbm:t=>`Ningún servicio con este filtro en ${t}. Te mostramos los de los municipios más cercanos, con la distancia aproximada.`,nores:"No se ha encontrado ningún servicio con este filtro. Prueba con «Limpiar filtros» o cambia la búsqueda.",ab2b:"Para corregir un dato, hay que dirigirse al organismo que gestiona el registro correspondiente (servicios sociales, salud, educación, etc.): esta página solo muestra su contenido y no puede modificarlo."});
+Object.assign(I.en,{cl:"Clear filters",fbm:t=>`No services match this filter in ${t}. Showing those in the nearest municipalities, with approximate distance.`,nores:"No services found with this filter. Try “Clear filters” or change your search.",ab2b:"To correct a piece of data, contact the body that manages the corresponding register (social services, health, education, etc.): this page only displays its content and cannot modify it."});
+Object.assign(I.fr,{cl:"Effacer les filtres",fbm:t=>`Aucun service correspondant à ce filtre à ${t}. Voici ceux des communes les plus proches, avec la distance approximative.`,nores:"Aucun service trouvé avec ce filtre. Essayez « Effacer les filtres » ou modifiez la recherche.",ab2b:"Pour corriger une donnée, il faut s'adresser à l'organisme qui gère le registre concerné (services sociaux, santé, éducation, etc.) : cette page n'en affiche que le contenu et ne peut pas le modifier."});
+Object.assign(I.ar,{cl:"مسح المرشحات",fbm:t=>`لا توجد خدمات بهذا المرشح في ${t}. نعرض لك خدمات أقرب البلديات مع المسافة التقريبية.`,nores:"لم يتم العثور على أي خدمة بهذا المرشح. جرّب «مسح المرشحات» أو غيّر البحث.",ab2b:"لتصحيح أي بيان، يجب التوجه إلى الجهة التي تدير السجل المعني (الخدمات الاجتماعية أو الصحة أو التعليم وغيرها): هذه الصفحة تعرض المحتوى فقط ولا يمكنها تعديله."});
+const NEEDS=[{k:["MENJADOR","ALIMENT"]},{k:["ALLOTJ","ALBERG","HABITATGE","ACOLLIDA","EXCLUSI"]},{k:["VIOL","MASCLISTA","MALTRACT"],h:"viol",t:"016"},{k:["INFANT","ADOLESC","MENOR"],h:"inf",t:"116111"},{k:["GENT GRAN","TELEASSIST","ENVELLIMENT"]},{k:["DISCAPACIT"]},{k:["SALUT MENTAL","TRASTORN"],h:"salm",t:"024"},{k:["DOMICILI"]}];
+
+const ALERTS=[["fa-cloud-sun-rain","AEMET","https://www.aemet.es/es/eltiempo/prediccion/avisos"],
+["fa-temperature-half","Meteocat","https://www.meteo.cat"],
+["fa-shield-halved","Protecció Civil · Generalitat","https://interior.gencat.cat/ca/arees_dactuacio/proteccio_civil"],
+["fa-phone-volume","112 Catalunya","https://112.gencat.cat"],
+["fa-triangle-exclamation","Protección Civil (DGPCE)","https://www.proteccioncivil.es"],
+["fa-leaf","MITECO","https://www.miteco.gob.es"],
+["fa-bolt","Red Eléctrica","https://www.ree.es"]];
+const NEWS=[["fa-newspaper","Generalitat · Actualitat","https://web.gencat.cat/ca/actualitat"],
+["fa-people-roof","Drets Socials","https://dretssocials.gencat.cat"],
+["fa-landmark","Seguridad Social","https://www.seg-social.es"],
+["fa-scroll","BOE","https://www.boe.es"]];
+
+const AIDS=[
+[["Ingrés Mínim Vital (IMV)","Ingreso Mínimo Vital (IMV)","Minimum Income (IMV)"],["Prestació estatal per garantir uns ingressos mínims a llars en situació de vulnerabilitat.","Prestación estatal que garantiza unos ingresos mínimos a hogares en situación de vulnerabilidad.","State benefit guaranteeing a minimum income to vulnerable households."],"https://www.seg-social.es"],
+[["Bo social elèctric i tèrmic","Bono social eléctrico y térmico","Electricity and heating social bonus"],["Descomptes en la factura elèctrica i ajut per a energia tèrmica per a consumidors vulnerables.","Descuentos en la factura eléctrica y ayuda para energía térmica a consumidores vulnerables.","Electricity bill discounts and a heating aid for vulnerable consumers."],"https://www.bonosocial.gob.es"],
+[["Ajuts al lloguer i l'habitatge","Ayudas al alquiler y la vivienda","Rent and housing aid"],["Ajuts de la Generalitat i de l'Estat per pagar el lloguer o accedir a habitatge.","Ayudas autonómicas y estatales para pagar el alquiler o acceder a una vivienda.","Regional and state aid to pay rent or access housing."],"https://habitatge.gencat.cat"],
+[["Pensions no contributives (PNC)","Pensiones no contributivas (PNC)","Non-contributory pensions (PNC)"],["Pensions de jubilació i invalidesa per a persones sense cotització suficient i amb pocs recursos.","Pensiones de jubilación e invalidez para personas sin cotización suficiente y con pocos recursos.","Retirement and disability pensions for people with insufficient contributions and low income."],"https://www.seg-social.es"],
+[["Llei de dependència: visió general","Ley de Dependencia: visión general","Dependency Law: overview"],["Reconeix el dret a serveis i prestacions per a persones que necessiten ajuda per a l'autonomia personal.","Reconoce el derecho a servicios y prestaciones para quienes necesitan apoyo para su autonomía personal.","Recognises the right to services and benefits for people needing support with personal autonomy."],"https://dretssocials.gencat.cat"],
+[["SAD · Atenció a domicili","SAD · Ayuda a domicilio","SAD · Home help"],["Atenció personal i tasques domèstiques a la llar de la persona dependent.","Atención personal y necesidades domésticas en el hogar de la persona dependiente.","Personal care and household tasks at home."],"https://dretssocials.gencat.cat"],
+[["Teleassistència","Teleasistencia","Telecare"],["Dispositius de resposta immediata davant emergències domèstiques.","Dispositivos de respuesta inmediata ante emergencias domésticas.","Devices for immediate response to home emergencies."],"https://dretssocials.gencat.cat"],
+[["Centres de dia i de nit","Centros de día y de noche","Day and night centres"],["Atenció integral durant el dia o la nit per mantenir l'autonomia.","Atención integral de día o de noche para mantener la autonomía.","Comprehensive daytime or night care to maintain autonomy."],"https://dretssocials.gencat.cat"],
+[["Atenció residencial","Atención residencial","Residential care"],["Places en residències públiques o concertades per a persones grans o amb discapacitat severa.","Plazas en residencias públicas o concertadas para mayores o personas con discapacidad severa.","Places in public or subsidised residences for older people or people with severe disability."],"https://dretssocials.gencat.cat"],
+[["Prestacions econòmiques: PECE, PEVS, PEAA","Prestaciones económicas: PECE, PEVS, PEAA","Cash benefits: PECE, PEVS, PEAA"],["PECE: cures a l'entorn familiar. PEVS: ajut vinculat al servei si no hi ha plaça pública. PEAA: contractar un assistent personal.","PECE: cuidados en el entorno familiar. PEVS: ayuda vinculada al servicio si no hay plaza pública. PEAA: contratar un asistente personal.","PECE: care within the family. PEVS: service-linked aid if no public place exists. PEAA: hiring a personal assistant."],"https://dretssocials.gencat.cat"],
+[["Allotjament alternatiu d'urgència","Alojamiento alternativo de urgencia","Emergency alternative housing"],["Albergs i pisos tutelats per a persones sense llar o dones víctimes de violència de gènere.","Albergues y pisos tutelados para personas sin hogar o mujeres víctimas de violencia de género.","Shelters and supervised flats for homeless people or women victims of gender violence."],"https://dretssocials.gencat.cat"],
+[["Ajuts d'emergència social (AES)","Ayudas de emergencia social (AES)","Social emergency aid (AES)"],["Ajuts puntuals per cobrir necessitats bàsiques urgents. Es tramiten als serveis socials del teu municipi.","Ayudas puntuales para cubrir necesidades básicas urgentes. Se tramitan en los servicios sociales de tu municipio.","One-off aid for urgent basic needs. Apply through your municipality's social services."],"https://dretssocials.gencat.cat"]];
+
+const QUICK=["Barcelona","Girona","Lleida","Tarragona"];
+const DIRS=[["fa-hospital","https://canalsalut.gencat.cat"],["fa-graduation-cap","https://educacio.gencat.cat"],["fa-utensils","https://www.bancdelsaliments.org"],["fa-scale-balanced","https://justicia.gencat.cat"]];
+let lang="ca",aid=-1,need=-1,UPD=null,src="soc",hr=0,mainTypes=[],hr0=0,baseM=[],fb=false,reg=[],capM={},names=[],sel=null,res=[],listM=[],cnt=0;
+const $=id=>document.getElementById(id);
+const STOP=["l","el","la","les","els","de","del","d","dels"];
+const norm=s=>(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g," ").split(" ").filter(w=>w&&!STOP.includes(w)).sort().join(" ");
+const hav=(a,b)=>{const r=Math.PI/180,x=Math.sin((b[0]-a[0])*r/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin((b[1]-a[1])*r/2)**2;return 12742*Math.asin(Math.sqrt(x))};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const q1=s=>"'"+String(s).replace(/'/g,"''")+"'";
+async function soda(ds,p){const r=await fetch("https://analisi.transparenciacatalunya.cat/resource/"+ds+".json?"+new URLSearchParams(p));if(!r.ok)throw new Error(r.status);return r.json()}
+function pos(r,ks){for(const k of ks){const v=r[k];if(v&&typeof v==="object"){if(v.latitude&&v.longitude)return[+v.latitude,+v.longitude];if(Array.isArray(v.coordinates))return[+v.coordinates[1],+v.coordinates[0]]}}
+ const la=ks.find(k=>/lat/i.test(k)),lo=ks.find(k=>/lon|lng/i.test(k));if(!la||!lo)return null;
+ const a=parseFloat(String(r[la]).replace(",",".")),b=parseFloat(String(r[lo]).replace(",","."));return a>40&&a<43.5&&b>-0.5&&b<3.6?[a,b]:null}
+
+const map=L.map("map").setView([41.8,1.6],8);
+L.tileLayer("https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wmts/topografic/MON3857NW/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© ICGC · OpenStreetMap"}).addTo(map);
+const lay=L.layerGroup().addTo(map);
+const say=k=>{$("msg").textContent=I[lang][k]};
+
+async function init(){
+ say("ld");
+ try{reg=await soda("ivft-vegh",{$select:"municipi,comarca,count(*) as n",$group:"municipi,comarca",$limit:5000})}catch(e){say("er");return}
+ reg.forEach(x=>{x.k=norm(x.municipi);x.n=+x.n});
+ try{const c=await soda("wpyq-we8x",{$limit:2000});if(c.length){const ks=Object.keys(c[0]);
+  const nk=ks.find(k=>/^(nom_)?municipi$/i.test(k))||ks.find(k=>/municipi/i.test(k)&&!/cod|id|ine/i.test(k))||ks.find(k=>/^nom/i.test(k)&&!/comarca|provinc/i.test(k));
+  c.forEach(r=>{const p=pos(r,ks),n=r[nk];if(p&&n)capM[norm(n)]={name:n,p}})}}catch(e){}
+ const m=new Map();Object.values(capM).forEach(v=>m.set(norm(v.name),v.name));reg.forEach(x=>{if(!m.has(x.k))m.set(x.k,x.municipi)});
+ names=[...m.values()].sort((a,b)=>a.localeCompare(b,"ca"));
+ $("dl").innerHTML=names.map(n=>`<option value="${esc(n)}">`).join("");
+ try{const m=await (await fetch("https://analisi.transparenciacatalunya.cat/api/views/ivft-vegh.json")).json();if(m.rowsUpdatedAt)UPD=new Date(m.rowsUpdatedAt*1000)}catch(e){}
+ text();
+}
+
+async function go(q){
+ const T=I[lang];q=(q||"").trim();if(!q)return;$("cand").innerHTML="";
+ if(/^\d{5}$/.test(q)){const n=await byCP(q);if(!n){say("nm");return}q=n}
+ let k=norm(q);if(ALI[k]){q=ALI[k];k=norm(q)}
+ let re=reg.find(x=>x.k===k),cp=capM[k];
+ if(!re&&!cp){const tk=k.split(" ").filter(Boolean);
+  const all=[...new Set([...Object.keys(capM),...reg.map(x=>x.k)])].filter(c=>tk.length&&tk.every(t=>c.split(" ").some(w=>w.startsWith(t))));
+  if(all.length===1){k=all[0];re=reg.find(x=>x.k===k);cp=capM[k]}
+  else if(all.length>1){const nm=all.slice(0,12).map(c=>capM[c]?capM[c].name:reg.find(x=>x.k===c).municipi);
+   $("cand").innerHTML=nm.map(n=>`<button class="chip" data-q="${esc(n)}">${esc(n)}</button>`).join("");$("msg").textContent=T.ch;return}
+  else{say("nm");return}}
+ const p=cp?cp.p:null;sel={name:cp?cp.name:re.municipi,p,own:!!re};say("ld");firstStep();
+ if(src!=="soc"){if(!p){say("nm");return}return goG()}
+ if(re)listM=[{m:re.municipi,d:0,n:re.n}];
+ else{let l=reg.map(x=>({m:x.municipi,n:x.n,c:capM[x.k]})).filter(x=>x.c).map(x=>({m:x.m,n:x.n,d:hav(p,x.c.p)})).sort((a,b)=>a.d-b.d),s=0;listM=[];
+  for(const x of l){listM.push(x);s+=x.n;if(s>=20||listM.length>=8)break}}
+ if(!listM.length){say("nm");return}
+ baseM=listM.slice();fb=false;
+ try{
+  const t=await soda("ivft-vegh",{$select:"tipologia,count(*) as n",$group:"tipologia",$where:"municipi in("+listM.map(x=>q1(x.m)).join(",")+")",$limit:300,$order:"tipologia"});
+  $("ft").innerHTML=`<option value="">${T.all}</option>`+t.filter(x=>x.tipologia).map(x=>`<option value="${esc(x.tipologia)}">${esc(x.tipologia)}</option>`).join("");
+  $("fq").value="";await rows();
+ }catch(e){say("er")}
+}
+function W(all){let w=all?"registre IS NOT NULL":"municipi in("+listM.map(x=>q1(x.m)).join(",")+")";const t=$("ft").value,f=$("fq").value.trim().toUpperCase();
+ if(t)w+=" AND tipologia="+q1(t);if(need>=0){w+=" AND ("+NEEDS[need].k.map(x=>{const u=q1("%"+x+"%");return `upper(tipologia) like ${u} OR upper(nom) like ${u}`}).join(" OR ")+")"}if(f){const u=q1("%"+f+"%");w+=` AND (upper(nom) like ${u} OR upper(tipologia) like ${u} OR upper(adreca) like ${u})`}return w}
+async function rows(){
+ if(src!=="soc"){try{await rowsG()}catch(e){say("er")}return}
+ const SF="nom,tipologia,adreca,municipi,cp,comarca,telefon,capacitat,entitat_titular,qualificacio";
+ const get=()=>{const w=W();return Promise.all([soda("ivft-vegh",{$where:w,$select:SF,$order:"municipi,nom",$limit:300}),soda("ivft-vegh",{$where:w,$select:"count(*) as n"})])};
+ try{
+  listM=baseM.slice();fb=false;
+  let [r,c]=await get();
+  if(!r.length&&sel&&sel.p){
+   const g=await soda("ivft-vegh",{$select:"municipi,count(*) as n",$group:"municipi",$where:W(true),$limit:2000});
+   const cand=g.map(x=>({m:x.municipi,n:+x.n,c:capM[norm(x.municipi)]})).filter(x=>x.c).map(x=>({m:x.m,n:x.n,d:hav(sel.p,x.c.p)})).sort((a,b)=>a.d-b.d);
+   let t=0;const o=[];for(const x of cand){o.push(x);t+=x.n;if(t>=20||o.length>=8)break}
+   if(o.length){listM=o;fb=true;[r,c]=await get()}
+  }
+  const dm={};listM.forEach(x=>dm[x.m]=x.d);
+  res=r.map(x=>({...x,d:dm[x.municipi]||0})).sort((a,b)=>a.d-b.d);cnt=+(c[0]&&c[0].n)||r.length;draw();
+ }catch(e){say("er")}
+}
+function draw(){
+ const T=I[lang];if(!sel)return;map.invalidateSize();
+ $("msg").textContent=!res.length?T.nores:(src!=="soc"?T.hmn(sel.name,Math.round(hr/1000)):fb?T.fbm(sel.name):(sel.own?T.ownm:T.farm)(sel.name))+" · "+T.cnt(res.length,cnt);
+ $("cards").innerHTML=res.map(r=>{const a=[r.adreca,r.cp,r.municipi].filter(Boolean).join(", ");return `<div class="rc" style="--c:#059669" data-t="${esc([r.nom,r.tipologia,a,r.telefon?T.tel+" "+r.telefon:""].filter(Boolean).join("\n"))}"><span class="km">${src!=="soc"?(r.d<1?"< 1 km":"≈ "+r.d.toFixed(1)+" km"):(r.d<1?T.loc:"≈ "+Math.round(r.d)+" km")}</span><h3>${esc(r.nom)}</h3><small>${esc(r.tipologia)}</small><br><small>${esc(a)}</small>${(r.titular||r.entitat_titular)?`<br><small>${T.tit}: ${esc(r.titular||r.entitat_titular)}${r.qualificacio?" · "+esc(r.qualificacio):""}</small>`:""}${r.telefon?`<br><a href="tel:${esc(String(r.telefon).replace(/[^0-9+]/g,""))}">${T.tel} ${esc(r.telefon)}</a>`:""}${+r.capacitat>0?` · <small>${T.cap}: ${esc(r.capacitat)}</small>`:""}${r.web&&/^https?:/i.test(r.web)?` · <a href="${esc(r.web)}" target="_blank" rel="noopener">${T.open}</a>`:""}<div class="acts"><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(src!=="soc"?r.lat+","+r.lon:a+", Catalunya")}" target="_blank" rel="noopener"><i class="fa-solid fa-route"></i> ${T.route}</a><button data-ls="1" aria-label="${T.listen}" title="${T.listen}"><i class="fa-solid fa-volume-high"></i><span class="bt"> ${T.listen}</span></button><button data-cp="1" aria-label="${T.cp}" title="${T.cp}"><i class="fa-regular fa-copy"></i><span class="bt"> ${T.cp}</span></button><button data-sh="1" aria-label="${T.sh}" title="${T.sh}"><i class="fa-solid fa-share-nodes"></i><span class="bt"> ${T.sh}</span></button></div></div>`}).join("");
+ lay.clearLayers();const pts=[];
+ if(sel.p){pts.push(sel.p);L.circleMarker(sel.p,{radius:11,color:"#0f172a",weight:3,fillColor:"#fbbf24",fillOpacity:1}).addTo(lay).bindPopup("<b>"+esc(sel.name)+"</b>")}
+ if(src!=="soc"){res.forEach(r=>{pts.push([r.lat,r.lon]);L.circleMarker([r.lat,r.lon],{radius:7,color:"#fff",weight:2,fillColor:SC[src],fillOpacity:.95}).addTo(lay).bindPopup("<b>"+esc(r.nom)+"</b><br>"+esc(r.tipologia)+"<br>"+esc(r.adreca))})}
+ const g={};if(src==="soc")res.forEach(r=>(g[r.municipi]=g[r.municipi]||[]).push(r));
+ Object.keys(g).forEach(m=>{const c=capM[norm(m)];if(!c)return;pts.push(c.p);
+  L.circleMarker(c.p,{radius:9,color:"#fff",weight:2,fillColor:"#059669",fillOpacity:.95}).addTo(lay).bindPopup(`<b>${esc(m)}</b> (${g[m].length})<br>`+g[m].slice(0,5).map(r=>esc(r.nom)).join("<br>"))});
+ if(pts.length)map.fitBounds(pts,{padding:[30,30],maxZoom:13});
+}
+
+const at=i=>{const x={ca:0,es:1,en:2}[lang];return AX[lang]?AX[lang][i]:[AIDS[i][0][x],AIDS[i][1][x]]};
+const VOICE={ca:"ca-ES",es:"es-ES",en:"en-GB",fr:"fr-FR",ar:"ar-SA"};
+function speak(t){const s=window.speechSynthesis;if(!s||!t)return;s.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=VOICE[lang];s.speak(u)}
+const rcText=el=>[...el.querySelectorAll("h3,small,a[href^=tel]")].map(e=>e.innerText).join(". ");
+let CURS="";
+const SC={sal:"#dc2626",far:"#d97706",edu:"#2563eb"};
+const LVC=["einf1c","einf2c","epri","eso","batx","cfpm","cfps","ee","adults"];
+const catTxt=c=>{const p=(c||"").split("|").map(x=>x.trim().replace(/^\d+\.\s*/,"")).filter(Boolean);return (p.length>1?p.slice(1):p).join(" › ")};
+const pc=x=>/^\d{4}$/.test(x||"")?"0"+x:(x||"");
+const bb=(la,lo,r,y,x)=>{const dy=r/111000,dx=r/(111000*Math.cos(la*Math.PI/180));return `${y}>${la-dy} AND ${y}<${la+dy} AND ${x}>${lo-dx} AND ${x}<${lo+dx}`};
+const GS={
+ far:{ds:"nrmq-ytje",geo:(la,lo,r)=>`within_circle(georeferencia,${la},${lo},${r})`,tc:"tipus_establiment_nom",
+  fields:"establiment_nom,tipus_establiment_nom,tipus_via_nom,via_nom,numero_via,codi_postal,municipi_nom,telefon,latitud,longitud,titular_nom",tx:["establiment_nom","via_nom","tipus_establiment_nom"],
+  ord:(la,lo)=>`distance_in_meters(georeferencia,'POINT(${lo} ${la})')`,
+  row:x=>({nom:x.establiment_nom,tipologia:x.tipus_establiment_nom,adreca:[x.tipus_via_nom,x.via_nom].filter(Boolean).join(" ")+(x.numero_via?", "+x.numero_via:""),cp:x.codi_postal,municipi:x.municipi_nom,telefon:x.telefon,titular:x.titular_nom,lat:+x.latitud,lon:+x.longitud})},
+ sal:{ds:"8gmd-gz7i",geo:(la,lo,r)=>`within_circle(localitzacio,${la},${lo},${r})`,base:()=>"categoria like 'Salut|%'",tc:"categoria",tl:catTxt,
+  fields:"nom,categoria,via,num,cpostal,poblacio,telefon1,web,latitud,longitud",tx:["nom","via","categoria"],
+  ord:(la,lo)=>`distance_in_meters(localitzacio,'POINT(${lo} ${la})')`,
+  row:x=>({nom:x.nom,tipologia:catTxt(x.categoria),adreca:[x.via,x.num&&x.num!=="0"?x.num:""].filter(Boolean).join(", "),cp:pc(x.cpostal),municipi:x.poblacio,telefon:x.telefon1,web:x.web&&(x.web.url||x.web),lat:+x.latitud,lon:+x.longitud})},
+ edu:{ds:"kvmv-ahh4",geo:(la,lo,r)=>bb(la,lo,r,"coordenades_geo_y","coordenades_geo_x"),base:()=>"curs="+q1(CURS),
+  pre:async()=>{if(!CURS){const m=await soda("kvmv-ahh4",{$select:"curs,count(*) as n",$group:"curs",$limit:50});CURS=m.map(x=>x.curs).sort().pop()}},
+  opts:T=>LVC.map((c,i)=>`<option value="${c}">${esc(T.lv[i])}</option>`).join(""),
+  fields:"denominaci_completa,nom_naturalesa,nom_titularitat,adre_a,codi_postal,tel_fon,nom_municipi,url,coordenades_geo_x,coordenades_geo_y,"+LVC.join(","),tx:["denominaci_completa","adre_a","nom_municipi"],
+  ord:(la,lo)=>`(coordenades_geo_y-${la})*(coordenades_geo_y-${la})+(coordenades_geo_x-${lo})*(coordenades_geo_x-${lo})`,
+  row:x=>({nom:x.denominaci_completa,tipologia:[x.nom_naturalesa,LVC.filter(c=>x[c]).map(c=>I[lang].lv[LVC.indexOf(c)]).join(", ")].filter(Boolean).join(" · "),adreca:x.adre_a,cp:x.codi_postal,municipi:x.nom_municipi,telefon:x.tel_fon,web:x.url,titular:x.nom_titularitat,lat:+x.coordenades_geo_y,lon:+x.coordenades_geo_x})}};
+const BW=g=>{const b=g.base?g.base():"";return b?" AND "+b:""};
+async function goG(){
+ const g=GS[src];
+ try{
+  const la=sel.p[0],lo=sel.p[1];if(g.pre)await g.pre();
+  const W0=r=>g.geo(la,lo,r)+BW(g);let R=5000;
+  for(const r of [5000,15000,40000,100000]){R=r;const c=await soda(g.ds,{$select:"count(*) as n",$where:W0(r)});if(+(c[0]&&c[0].n)>=15)break}
+  hr=R;hr0=R;let opts;
+  if(g.tc){const t=await soda(g.ds,{$select:g.tc+",count(*) as n",$group:g.tc,$where:W0(R),$limit:300});t.sort((a,b)=>b.n-a.n);
+   opts=t.filter(x=>x[g.tc]).map(x=>`<option value="${esc(x[g.tc])}">${esc(g.tl?g.tl(x[g.tc]):x[g.tc])} (${x.n})</option>`).join("")}
+  else opts=g.opts(I[lang]);
+  $("ft").innerHTML=`<option value="">${I[lang].all}</option>`+opts;$("fq").value="";await rowsG();
+ }catch(e){say("er")}
+}
+async function rowsG1(last){
+ const g=GS[src],la=sel.p[0],lo=sel.p[1],ty=$("ft").value,f=$("fq").value.trim().toUpperCase();
+ let w=g.geo(la,lo,hr)+BW(g);
+ if(ty){if(g.tc)w+=` AND ${g.tc}=${q1(ty)}`;else if(LVC.includes(ty))w+=` AND ${ty} IS NOT NULL`}
+ if(f){const u=q1("%"+f+"%");w+=" AND ("+g.tx.map(c=>`upper(${c}) like ${u}`).join(" OR ")+")"}
+ let r;try{r=await soda(g.ds,{$where:w,$select:g.fields,$order:g.ord(la,lo),$limit:300})}catch(e){}
+ if(!r)r=await soda(g.ds,{$where:w,$select:g.fields,$limit:300});
+ const c=await soda(g.ds,{$where:w,$select:"count(*) as n"});
+ res=r.map(g.row).filter(x=>x.lat&&x.lon).map(x=>({...x,d:hav(sel.p,[x.lat,x.lon])})).sort((a,b)=>a.d-b.d);
+ cnt=+(c[0]&&c[0].n)||res.length;if(res.length||last)draw();
+}
+const ALI=Object.fromEntries([["Lérida","Lleida"],["Gerona","Girona"],["Vich","Vic"],["Tarrasa","Terrassa"],["Figueras","Figueres"],["Rosas","Roses"],["Seo de Urgel","la Seu d'Urgell"],["San Cugat","Sant Cugat del Vallès"],["Villafranca del Penedés","Vilafranca del Penedès"],["Villanueva y Geltrú","Vilanova i la Geltrú"],["Cerdañola","Cerdanyola del Vallès"]].map(([a,b])=>[norm(a),b]));
+let FS=[];
+
+function quitNow(){
+  if(window.sessionStorage)sessionStorage.clear();
+  window.location.replace("https://www.weather.com/");
+}
+
+let esc1=0;document.addEventListener("keydown",e=>{if(e.key==="Escape"){const n=Date.now();if(n-esc1<800)quitNow();esc1=n}});
+function copyT(t,b){const ok=()=>{const o=b.innerHTML;b.textContent=I[lang].copied;setTimeout(()=>{b.innerHTML=o},1500)};
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,()=>{});
+ else{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){}a.remove()}}
+async function byCP(c){try{let r=await soda("ivft-vegh",{$select:"municipi,count(*) as n",$group:"municipi",$where:"cp="+q1(c),$limit:5});
+ if(!r.length)r=await soda("kvmv-ahh4",{$select:"nom_municipi as municipi,count(*) as n",$group:"nom_municipi",$where:"codi_postal="+q1(c),$limit:5});
+ r.sort((a,b)=>b.n-a.n);return r[0]?r[0].municipi:""}catch(e){return ""}}
+function geoGo(){if(!navigator.geolocation||!Object.keys(capM).length){say("geoer");return}
+ navigator.geolocation.getCurrentPosition(pos=>{const p=[pos.coords.latitude,pos.coords.longitude];let b=null,bd=1e9;
+  Object.values(capM).forEach(v=>{const d=hav(p,v.p);if(d<bd){bd=d;b=v}});
+  if(b&&bd<60){$("q").value=b.name;go(b.name)}else say("geoer")},()=>say("geoer"),{timeout:10000})}
+async function firstStep(){
+ FS=[];renderFirst();if(!sel||!sel.p)return;
+ const cat="categoria like 'Serveis socials bàsics|Servei bàsic d%atenci%social%'",la=sel.p[0],lo=sel.p[1];
+ try{let r=[];
+  for(const R of [5000,15000,40000,100000]){r=await soda("8gmd-gz7i",{$where:`within_circle(localitzacio,${la},${lo},${R}) AND ${cat}`,$select:"nom,via,num,cpostal,poblacio,telefon1,latitud,longitud",$limit:50});if(r.length)break}
+  FS=r.map(x=>({...x,d:hav(sel.p,[+x.latitud,+x.longitud])})).sort((a,b)=>a.d-b.d).slice(0,2);renderFirst();
+ }catch(e){}
+}
+function renderFirst(){
+ const T=I[lang],box=$("first");if(!FS.length){box.hidden=true;box.innerHTML="";return}
+ box.innerHTML=`<h3><i class="fa-solid fa-flag"></i> ${T.fs_h}</h3><p>${T.fs_p}</p>`+FS.map(x=>{
+  const a=[x.via,x.num&&x.num!=="0"?x.num:"",pc(x.cpostal),x.poblacio].filter(Boolean).join(", "),t=String(x.telefon1||"").replace(/[^0-9+]/g,"");
+  return `<div class="rc" style="--c:#b45309"><span class="km">${x.d<1?"< 1 km":"≈ "+x.d.toFixed(1)+" km"}</span><h3>${esc(x.nom)}</h3><small>${esc(a)}</small>${t?`<br><a class="btn" href="tel:${t}"><i class="fa-solid fa-phone"></i> ${T.call} ${esc(x.telefon1)}</a>`:""}<div class="acts"><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(x.latitud+","+x.longitud)}" target="_blank" rel="noopener"><i class="fa-solid fa-route"></i> ${T.route}</a></div></div>`}).join("")+`<p class="note">${T.cita}</p>`;
+ box.hidden=false}
+async function rowsG(){
+ const rd=[hr0,15000,40000,100000].filter((r,i,a)=>r>=hr0&&a.indexOf(r)===i).sort((a,b)=>a-b);
+ for(let i=0;i<rd.length;i++){hr=rd[i];await rowsG1(i===rd.length-1);if(res.length)return}
+}
+function renderNeeds(){const T=I[lang];$("needs").innerHTML=T.nd.map((n,i)=>`<button class="nb" data-nd="${i}" aria-pressed="${i===need}">${n}</button>`).join("");
+ const h=$("help"),N=src==="soc"?NEEDS[need]:null;if(N&&N.h){h.hidden=false;h.innerHTML=`<i class="fa-solid fa-phone"></i> ${T.hl[N.h]} <a class="btn" href="tel:${N.t}">${N.t.replace("116111","116 111")}</a>`}else h.hidden=true}
+
+function text(){
+ const T=I[lang],ix={ca:0,es:1,en:2}[lang];document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+ [["t_em","em"],["t_hc","hc"],["t_band","band"],["t_bandl","bandl"],["t_badge","badge"],["t_h1","h1"],["t_hp","hp"],["t_go","go"],["t_quick","quick"],["t_tag1","tag1"],["t_h2a","h2a"],["t_note","note"],["t_tag2","tag2"],["t_h2b","h2b"],["t_pb","pb"],["t_news","news"],["t_tag3","tag3"],["t_h2c","h2c"],["t_dirs","dirs"],["t_rd","rd"],["t_ez","easy"],["t_need","need"],["t_kw","kw"],["t_priv_h","priv_h"],["t_priv","priv"],["t_priv2","priv2"],["t_qe","qe"],["t_geo","geo"],["t_pr","pr"],["t_tag4","tag4"],["t_ab_h","ab_h"],["t_ab1","ab1"],["t_ab2","ab2"],["t_ab2b","ab2b"],["t_cl","cl"],["t_ab3","ab3"]].forEach(([i,k])=>$(i).textContent=T[k]);
+ $("q").placeholder=T.ph;$("n4").textContent=T.n4;renderFirst();$("leg").textContent=(src==="soc"?T.src:src==="far"?T.hsrc:T.srcX[src])+" · "+T.upd(new Date().toLocaleDateString(lang),UPD?UPD.toLocaleDateString(lang):"");$("seg").innerHTML=T.srcs.map((n,i)=>`<button class="nb" data-src="${["soc","sal","edu","far"][i]}" aria-pressed="${src===["soc","sal","edu","far"][i]}">${n}</button>`).join("");$("needsb").hidden=src!=="soc";renderNeeds();if(document.body.classList.contains("easy"))$("t_hp").textContent=T.easyhp;$("fq").placeholder=T.fph;if(src==="soc"&&$("ft").options[0])$("ft").options[0].textContent=T.all;["n1","n2","n3"].forEach((id,i)=>$(id).textContent=T.n[i]);
+ $("quick").innerHTML=QUICK.map(q=>`<button class="chip" data-q="${q}">${q}</button>`).join("");
+ $("dirs").innerHTML=DIRS.map((d,i)=>`<a class="ac" href="${d[1]}" target="_blank" rel="noopener"><i class="fa-solid ${d[0]}"></i><b>${T.dl[i]}</b><span>${T.open} →</span></a>`).join("");
+ const card=a=>a.map(x=>`<a class="ac" href="${x[2]}" target="_blank" rel="noopener"><i class="fa-solid ${x[0]}"></i><b>${x[1]}</b><span>${T.open} →</span></a>`).join("");
+ $("alerts").innerHTML=card(ALERTS);$("news").innerHTML=card(NEWS);
+ $("al").innerHTML=AIDS.map((a,i)=>`<button data-aid="${i}" aria-pressed="${i===aid}">${at(i)[0]}</button>`).join("");
+ $("dt").innerHTML=aid<0?`<p>${T.pickA}</p>`:`<h3>${at(aid)[0]}</h3><p>${at(aid)[1]}</p><a class="btn" href="${AIDS[aid][2]}" target="_blank" rel="noopener">${T.more}</a><p class="note">${T.revd}: ${REV}</p>`;
+ if(sel&&res.length)draw();else if(!names.length&&!reg.length)say("ld");else if(!sel)say("ready");
+}
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+ if(b.id==="cl"){need=-1;renderNeeds();if(sel)go(sel.name);else{$("fq").value="";$("ft").value=""}}
+ else if(b.id==="qe"){quitNow()}
+ else if(b.id==="geo"){geoGo()}
+ else if(b.id==="pr"){window.print()}
+ else if(b.dataset.cp!==undefined){copyT(b.closest(".rc").dataset.t,b)}
+ else if(b.dataset.sh!==undefined){const t=b.closest(".rc").dataset.t;if(navigator.share)navigator.share({title:I[lang].h1,text:t}).catch(()=>{});else copyT(t,b)}
+ else if(b.dataset.src){src=b.dataset.src;need=-1;res=[];text();if(sel)go(sel.name)}
+ else if(b.dataset.nd!==undefined){need=need===+b.dataset.nd?-1:+b.dataset.nd;renderNeeds();if(sel)rows()}
+ else if(b.id==="rd"){if(window.speechSynthesis&&speechSynthesis.speaking)speechSynthesis.cancel();else speak($("msg").textContent+". "+[...document.querySelectorAll(".rc")].slice(0,5).map(rcText).join(". "))}
+ else if(b.id==="ez"){document.body.classList.toggle("easy");b.setAttribute("aria-pressed",document.body.classList.contains("easy"));text()}
+ else if(b.dataset.ls!==undefined){speak(rcText(b.closest(".rc")))}
+ else if(b.dataset.q){$("q").value=b.dataset.q;go(b.dataset.q)}
+ else if(b.dataset.aid){aid=+b.dataset.aid;text()}
+ else if(b.id==="hc"){document.body.classList.toggle("hc");b.setAttribute("aria-pressed",document.body.classList.contains("hc"))}
+ else if(b.id==="fp"||b.id==="fm"){const r=document.documentElement,c=parseFloat(getComputedStyle(r).fontSize);r.style.setProperty("--fs",Math.min(26,Math.max(13,c+(b.id==="fp"?2:-2)))+"px")}});
+$("sf").onsubmit=e=>{e.preventDefault();go($("q").value)};
+$("lang").onchange=e=>{lang=e.target.value;text()};
+$("ft").onchange=()=>{if(sel)rows()};$("fq").onchange=()=>{if(sel)rows()};
+text();init();
+
+// Registre del Service Worker per a la PWA (offline)
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
