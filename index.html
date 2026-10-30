@@ -159,7 +159,9 @@ body.hc .first{background:#000}
   <div class="tl">
     <button id="fm" aria-label="A−">A−</button><button id="fp" aria-label="A+">A+</button>
     <button id="hc" aria-pressed="false"><i class="fa-solid fa-circle-half-stroke"></i> <span id="t_hc"></span></button>
-    <button id="rd"><i class="fa-solid fa-volume-high"></i> <span id="t_rd"></span></button><button id="ez" aria-pressed="false"><i class="fa-solid fa-book-open"></i> <span id="t_ez"></span></button><i class="fa-solid fa-globe"></i>
+    <button id="rd"><i class="fa-solid fa-volume-high"></i> <span id="t_rd"></span></button><button id="ez" aria-pressed="false"><i class="fa-solid fa-book-open"></i> <span id="t_ez"></span></button>
+<button id="btnInstallPWA" style="display:none; background:var(--g); color:#fff; border:none; font-weight:bold; padding:3px 9px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-download"></i> Instal·lar App</button>
+<i class="fa-solid fa-globe"></i>
     <select id="lang" aria-label="Language"><option value="ca">Català</option><option value="es">Castellano</option><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select>
   </div></div></div>
 
@@ -427,6 +429,7 @@ function pos(r,ks){for(const k of ks){const v=r[k];if(v&&typeof v==="object"){if
 const map=L.map("map").setView([41.8,1.6],8);
 if (window.innerWidth <= 860) {
   map.dragging.disable();
+}
 L.tileLayer("https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wmts/topografic/MON3857NW/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© ICGC · OpenStreetMap"}).addTo(map);
 const lay=L.layerGroup().addTo(map);
 const say=k=>{$("msg").textContent=I[lang][k]};
