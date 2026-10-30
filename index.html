@@ -623,15 +623,26 @@ $("sf").onsubmit=e=>{e.preventDefault();go($("q").value)};
 $("lang").onchange=e=>{lang=e.target.value;text()};
 $("ft").onchange=()=>{if(sel)rows()};$("fq").onchange=()=>{if(sel)rows()};
 text();init();
+text();init();
+
 // Captura de l'esdeveniment d'instal·lació de la PWA
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  // Pots fer visible un botó o banner d'instal·lació a la capçalera
   const installBtn = document.getElementById('btnInstallPWA');
   if (installBtn) installBtn.style.display = 'inline-block';
 });
+
+document.getElementById('btnInstallPWA')?.addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById('btnInstallPWA').style.display = 'none';
+  }
+});
+
 // Registre del Service Worker per a la PWA (offline)
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
