@@ -138,6 +138,14 @@ body.hc .first{background:#000}
   }
   .sb input { font-size: 16px; }
 }
+@media (max-width: 600px) {
+  .qe {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    bottom: 10px;
+    right: 10px;
+  }
+}
 </style>
 </head>
 <body>
@@ -172,7 +180,11 @@ body.hc .first{background:#000}
 <section class="hero"><div class="w">
   <span class="badge"><i class="fa-solid fa-shield-heart"></i> <span id="t_badge"></span></span>
   <h1 id="t_h1"></h1><p id="t_hp"></p>
-  <form class="sb" id="sf" role="search"><input id="q" type="text" autocomplete="off" list="dl"><datalist id="dl"></datalist><button type="submit" id="t_go"></button></form>
+  <form class="sb" id="sf" role="search">
+  <input id="q" type="search" enterkeyhint="search" autocomplete="off" list="dl">
+  <datalist id="dl"></datalist>
+  <button type="submit" id="t_go"></button>
+</form>
   <div class="cand" id="cand"></div>
   <div class="quick"><span id="t_quick"></span><span id="quick"></span><button type="button" class="chip" id="geo"><i class="fa-solid fa-location-crosshairs"></i> <span id="t_geo"></span></button></div>
 </div></section>
@@ -413,6 +425,8 @@ function pos(r,ks){for(const k of ks){const v=r[k];if(v&&typeof v==="object"){if
  const a=parseFloat(String(r[la]).replace(",",".")),b=parseFloat(String(r[lo]).replace(",","."));return a>40&&a<43.5&&b>-0.5&&b<3.6?[a,b]:null}
 
 const map=L.map("map").setView([41.8,1.6],8);
+if (window.innerWidth <= 860) {
+  map.dragging.disable();
 L.tileLayer("https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wmts/topografic/MON3857NW/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© ICGC · OpenStreetMap"}).addTo(map);
 const lay=L.layerGroup().addTo(map);
 const say=k=>{$("msg").textContent=I[lang][k]};
@@ -609,7 +623,15 @@ $("sf").onsubmit=e=>{e.preventDefault();go($("q").value)};
 $("lang").onchange=e=>{lang=e.target.value;text()};
 $("ft").onchange=()=>{if(sel)rows()};$("fq").onchange=()=>{if(sel)rows()};
 text();init();
-
+// Captura de l'esdeveniment d'instal·lació de la PWA
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Pots fer visible un botó o banner d'instal·lació a la capçalera
+  const installBtn = document.getElementById('btnInstallPWA');
+  if (installBtn) installBtn.style.display = 'inline-block';
+});
 // Registre del Service Worker per a la PWA (offline)
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
