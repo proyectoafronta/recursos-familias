@@ -8,6 +8,11 @@
 <!-- Metadades PWA per a mòbil i app -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#064e3b">
+<meta name="description" content="Recursos oficials per a famílies a Catalunya: serveis socials, salut, educació i ajudes públiques, a prop teu.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Recursos per a famílies · AFRONTA">
+<meta property="og:description" content="Serveis socials, salut, educació i ajudes públiques a prop teu, amb dades oficials de la Generalitat.">
+<meta property="og:url" content="https://proyectoafronta.github.io/recursos-familias/">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AFRONTA">
@@ -138,18 +143,33 @@ body.hc .first{background:#000}
   }
   .sb input { font-size: 16px; }
 }
-@media (max-width: 600px) {
-  .qe {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-    bottom: 10px;
-    right: 10px;
-  }
+.vt{display:none}
+@media(max-width:860px){
+ .brand img{height:40px}.brand .w{gap:8px 14px}
+ .tl{flex-wrap:nowrap;overflow-x:auto;max-width:100%}.tl button,.tl select{flex:none}
+ #t_hc,#t_rd,#t_ez,#t_cl,#t_pr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+ nav .w{flex-wrap:nowrap;overflow-x:auto}nav a{white-space:nowrap;flex:none}
+ #seg,#needs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;min-width:0;max-width:100%}.nb{white-space:nowrap;flex:none}
+ .needs b{flex:1 1 100%}
+ .cats{grid-template-columns:minmax(0,1fr) auto auto}.cats select{grid-column:1/-1}
+ .vt{display:flex;gap:6px;margin:8px 0}
+ .split .mapb{display:none}.split.mv-map .mapb{display:block}.split.mv-map #cards{display:none}
+ .qe{padding:8px 12px;font-size:.85rem;bottom:10px;right:10px}
+ footer{padding-bottom:70px}
+ .hero{padding:22px 0 20px}.hero p{font-size:.95rem}
 }
+.inst{background:#ecfdf5;color:#064e3b;padding:8px 16px;font-size:.9rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+.offb{background:#fee2e2;color:#7f1d1d;padding:8px 16px;font-weight:600;text-align:center}
+.inst[hidden],.offb[hidden]{display:none}
+body.hc .inst,body.hc .offb{background:#000;color:#fff;border:2px solid #fff}
+.e112{display:none}
+@media(max-width:860px){.e112{display:inline-flex;position:fixed;left:10px;bottom:10px;z-index:3000;background:#dc2626;color:#fff;border:2px solid #fff;border-radius:99px;padding:8px 14px;font-weight:800;text-decoration:none;align-items:center;gap:6px;box-shadow:0 4px 14px #0006}}
+@media print{.e112,.inst,.offb{display:none!important}}
 </style>
 </head>
 <body>
 <button id="qe" class="qe"><i class="fa-solid fa-person-running"></i> <span id="t_qe"></span></button>
+<a class="e112" id="e112" href="tel:112"><i class="fa-solid fa-phone-volume"></i> 112</a>
 <div class="top"><div class="w">
   <div class="em"><b><i class="fa-solid fa-phone-volume"></i> <span id="t_em"></span></b>
     <a href="tel:112" style="background:#dc2626">112</a>
@@ -159,9 +179,7 @@ body.hc .first{background:#000}
   <div class="tl">
     <button id="fm" aria-label="A−">A−</button><button id="fp" aria-label="A+">A+</button>
     <button id="hc" aria-pressed="false"><i class="fa-solid fa-circle-half-stroke"></i> <span id="t_hc"></span></button>
-    <button id="rd"><i class="fa-solid fa-volume-high"></i> <span id="t_rd"></span></button><button id="ez" aria-pressed="false"><i class="fa-solid fa-book-open"></i> <span id="t_ez"></span></button>
-<button id="btnInstallPWA" style="display:none; background:var(--g); color:#fff; border:none; font-weight:bold; padding:3px 9px; border-radius:6px; cursor:pointer;"><i class="fa-solid fa-download"></i> Instal·lar App</button>
-<i class="fa-solid fa-globe"></i>
+    <button id="rd"><i class="fa-solid fa-volume-high"></i> <span id="t_rd"></span></button><button id="ez" aria-pressed="false"><i class="fa-solid fa-book-open"></i> <span id="t_ez"></span></button><i class="fa-solid fa-globe"></i>
     <select id="lang" aria-label="Language"><option value="ca">Català</option><option value="es">Castellano</option><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select>
   </div></div></div>
 
@@ -179,14 +197,12 @@ body.hc .first{background:#000}
 
 <div class="band"><div class="w"><span><i class="fa-solid fa-bell"></i> <span id="t_band"></span></span><a href="#alertes" id="t_bandl"></a></div></div>
 
+<div class="inst" id="inst" hidden></div>
+<div class="offb" id="offb" role="alert" hidden></div>
 <section class="hero"><div class="w">
   <span class="badge"><i class="fa-solid fa-shield-heart"></i> <span id="t_badge"></span></span>
   <h1 id="t_h1"></h1><p id="t_hp"></p>
-  <form class="sb" id="sf" role="search">
-  <input id="q" type="search" enterkeyhint="search" autocomplete="off" list="dl">
-  <datalist id="dl"></datalist>
-  <button type="submit" id="t_go"></button>
-</form>
+  <form class="sb" id="sf" role="search"><input id="q" type="text" autocomplete="off" list="dl"><datalist id="dl"></datalist><button type="submit" id="t_go"></button></form>
   <div class="cand" id="cand"></div>
   <div class="quick"><span id="t_quick"></span><span id="quick"></span><button type="button" class="chip" id="geo"><i class="fa-solid fa-location-crosshairs"></i> <span id="t_geo"></span></button></div>
 </div></section>
@@ -202,6 +218,7 @@ body.hc .first{background:#000}
     <div class="msg" id="help" hidden></div>
     <div class="cats"><select id="ft" aria-label="Tipologia"><option value=""></option></select><input id="fq" type="text"><button class="nb" id="cl"><i class="fa-solid fa-eraser"></i> <span id="t_cl"></span></button><button class="nb" id="pr"><i class="fa-solid fa-print"></i> <span id="t_pr"></span></button></div>
   </div>
+  <div class="vt" id="vt"></div>
   <div class="split">
     <div class="mapb"><div id="map" role="application" aria-label="Map"></div>
       <div class="leg" id="leg"></div></div>
@@ -226,7 +243,7 @@ body.hc .first{background:#000}
 <footer>
   <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ca"><img src="img/Cc_by-nc-nd_icon.svg" alt="Creative Commons BY-NC-ND"></a>
   Proyecto AFRONTA - PID2022-139502OB-I00
-<details class="priv"><summary id="t_priv_h"></summary><p id="t_priv"></p><p id="t_priv2"></p></details>
+<details class="priv"><summary id="t_priv_h"></summary><p id="t_priv"></p><p id="t_priv2"></p><p id="t_priv3"></p></details>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
@@ -384,6 +401,12 @@ Object.assign(I.es,{cl:"Limpiar filtros",fbm:t=>`Ningún servicio con este filtr
 Object.assign(I.en,{cl:"Clear filters",fbm:t=>`No services match this filter in ${t}. Showing those in the nearest municipalities, with approximate distance.`,nores:"No services found with this filter. Try “Clear filters” or change your search.",ab2b:"To correct a piece of data, contact the body that manages the corresponding register (social services, health, education, etc.): this page only displays its content and cannot modify it."});
 Object.assign(I.fr,{cl:"Effacer les filtres",fbm:t=>`Aucun service correspondant à ce filtre à ${t}. Voici ceux des communes les plus proches, avec la distance approximative.`,nores:"Aucun service trouvé avec ce filtre. Essayez « Effacer les filtres » ou modifiez la recherche.",ab2b:"Pour corriger une donnée, il faut s'adresser à l'organisme qui gère le registre concerné (services sociaux, santé, éducation, etc.) : cette page n'en affiche que le contenu et ne peut pas le modifier."});
 Object.assign(I.ar,{cl:"مسح المرشحات",fbm:t=>`لا توجد خدمات بهذا المرشح في ${t}. نعرض لك خدمات أقرب البلديات مع المسافة التقريبية.`,nores:"لم يتم العثور على أي خدمة بهذا المرشح. جرّب «مسح المرشحات» أو غيّر البحث.",ab2b:"لتصحيح أي بيان، يجب التوجه إلى الجهة التي تدير السجل المعني (الخدمات الاجتماعية أو الصحة أو التعليم وغيرها): هذه الصفحة تعرض المحتوى فقط ولا يمكنها تعديله."});
+Object.assign(I.ca,{vw:["Llista","Mapa"]});Object.assign(I.es,{vw:["Lista","Mapa"]});Object.assign(I.en,{vw:["List","Map"]});Object.assign(I.fr,{vw:["Liste","Carte"]});Object.assign(I.ar,{vw:["القائمة","الخريطة"]});
+Object.assign(I.ca,{inst_ios:"Per tenir aquesta pàgina a mà: toca el botó Comparteix (el quadrat amb una fletxa) i tria «Afegeix a la pantalla d'inici».",inst_and:"Pots instal·lar aquesta pàgina al mòbil perquè s'obri com una aplicació.",inst_btn:"Instal·la",inst_x:"Tanca l'avís",off:"No tens connexió a internet. Aquesta pàgina necessita connexió per mostrar serveis i mapes. En una emergència, truca al 112.",priv3:"Si tanques l'avís d'instal·lació, el teu dispositiu recorda només aquest fet (sense enviar-lo enlloc) per no tornar-te'l a mostrar.",c112:"Truca al 112 (emergències)"});
+Object.assign(I.es,{inst_ios:"Para tener esta página a mano: toca el botón Compartir (el cuadrado con una flecha) y elige «Añadir a pantalla de inicio».",inst_and:"Puedes instalar esta página en el móvil para que se abra como una aplicación.",inst_btn:"Instalar",inst_x:"Cerrar el aviso",off:"No tienes conexión a internet. Esta página necesita conexión para mostrar servicios y mapas. En una emergencia, llama al 112.",priv3:"Si cierras el aviso de instalación, tu dispositivo recuerda solo ese hecho (sin enviarlo a ningún sitio) para no volver a mostrártelo.",c112:"Llama al 112 (emergencias)"});
+Object.assign(I.en,{inst_ios:"To keep this page handy: tap the Share button (the square with an arrow) and choose “Add to Home Screen”.",inst_and:"You can install this page on your phone so it opens like an app.",inst_btn:"Install",inst_x:"Close notice",off:"You are offline. This page needs an internet connection to show services and maps. In an emergency, call 112.",priv3:"If you close the install notice, your device remembers only that fact (without sending it anywhere) so it is not shown again.",c112:"Call 112 (emergencies)"});
+Object.assign(I.fr,{inst_ios:"Pour avoir cette page sous la main : touchez le bouton Partager (le carré avec une flèche) et choisissez « Sur l'écran d'accueil ».",inst_and:"Vous pouvez installer cette page sur votre téléphone pour qu'elle s'ouvre comme une application.",inst_btn:"Installer",inst_x:"Fermer l'avis",off:"Vous n'avez pas de connexion internet. Cette page a besoin de connexion pour afficher services et cartes. En cas d'urgence, appelez le 112.",priv3:"Si vous fermez l'avis d'installation, votre appareil retient uniquement ce fait (sans l'envoyer nulle part) pour ne plus vous l'afficher.",c112:"Appeler le 112 (urgences)"});
+Object.assign(I.ar,{inst_ios:"لإبقاء هذه الصفحة في متناول يدك: اضغط زر المشاركة (المربع مع سهم) ثم اختر «إضافة إلى الشاشة الرئيسية».",inst_and:"يمكنك تثبيت هذه الصفحة على هاتفك لتُفتح كتطبيق.",inst_btn:"تثبيت",inst_x:"إغلاق التنبيه",off:"لا يوجد اتصال بالإنترنت. تحتاج هذه الصفحة إلى اتصال لعرض الخدمات والخرائط. في حالات الطوارئ اتصل بالرقم 112.",priv3:"إذا أغلقت تنبيه التثبيت، يتذكر جهازك هذا الأمر فقط (دون إرساله إلى أي جهة) حتى لا يظهر لك مجدداً.",c112:"اتصل بالرقم 112 (الطوارئ)"});
 const NEEDS=[{k:["MENJADOR","ALIMENT"]},{k:["ALLOTJ","ALBERG","HABITATGE","ACOLLIDA","EXCLUSI"]},{k:["VIOL","MASCLISTA","MALTRACT"],h:"viol",t:"016"},{k:["INFANT","ADOLESC","MENOR"],h:"inf",t:"116111"},{k:["GENT GRAN","TELEASSIST","ENVELLIMENT"]},{k:["DISCAPACIT"]},{k:["SALUT MENTAL","TRASTORN"],h:"salm",t:"024"},{k:["DOMICILI"]}];
 
 const ALERTS=[["fa-cloud-sun-rain","AEMET","https://www.aemet.es/es/eltiempo/prediccion/avisos"],
@@ -414,7 +437,7 @@ const AIDS=[
 
 const QUICK=["Barcelona","Girona","Lleida","Tarragona"];
 const DIRS=[["fa-hospital","https://canalsalut.gencat.cat"],["fa-graduation-cap","https://educacio.gencat.cat"],["fa-utensils","https://www.bancdelsaliments.org"],["fa-scale-balanced","https://justicia.gencat.cat"]];
-let lang="ca",aid=-1,need=-1,UPD=null,src="soc",hr=0,mainTypes=[],hr0=0,baseM=[],fb=false,reg=[],capM={},names=[],sel=null,res=[],listM=[],cnt=0;
+let lang="ca",aid=-1,need=-1,UPD=null,src="soc",hr=0,mainTypes=[],hr0=0,baseM=[],fb=false,mapView=false,reg=[],capM={},names=[],sel=null,res=[],listM=[],cnt=0;
 const $=id=>document.getElementById(id);
 const STOP=["l","el","la","les","els","de","del","d","dels"];
 const norm=s=>(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g," ").split(" ").filter(w=>w&&!STOP.includes(w)).sort().join(" ");
@@ -427,18 +450,15 @@ function pos(r,ks){for(const k of ks){const v=r[k];if(v&&typeof v==="object"){if
  const a=parseFloat(String(r[la]).replace(",",".")),b=parseFloat(String(r[lo]).replace(",","."));return a>40&&a<43.5&&b>-0.5&&b<3.6?[a,b]:null}
 
 const map=L.map("map").setView([41.8,1.6],8);
-if (window.innerWidth <= 860) {
-  map.dragging.disable();
-}
 L.tileLayer("https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wmts/topografic/MON3857NW/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© ICGC · OpenStreetMap"}).addTo(map);
 const lay=L.layerGroup().addTo(map);
-const say=k=>{$("msg").textContent=I[lang][k]};
+const say=k=>{$("msg").textContent=(k==="er"&&!navigator.onLine)?I[lang].off:I[lang][k]};
 
 async function init(){
  say("ld");
  try{reg=await soda("ivft-vegh",{$select:"municipi,comarca,count(*) as n",$group:"municipi,comarca",$limit:5000})}catch(e){say("er");return}
  reg.forEach(x=>{x.k=norm(x.municipi);x.n=+x.n});
- try{const c=await soda("wpyq-we8x",{$limit:2000});if(c.length){const ks=Object.keys(c[0]);
+ try{const c=await soda("wpyq-we8x",{$select:"municipi,latitud,longitud",$limit:2000});if(c.length){const ks=Object.keys(c[0]);
   const nk=ks.find(k=>/^(nom_)?municipi$/i.test(k))||ks.find(k=>/municipi/i.test(k)&&!/cod|id|ine/i.test(k))||ks.find(k=>/^nom/i.test(k)&&!/comarca|provinc/i.test(k));
   c.forEach(r=>{const p=pos(r,ks),n=r[nk];if(p&&n)capM[norm(n)]={name:n,p}})}}catch(e){}
  const m=new Map();Object.values(capM).forEach(v=>m.set(norm(v.name),v.name));reg.forEach(x=>{if(!m.has(x.k))m.set(x.k,x.municipi)});
@@ -501,7 +521,7 @@ function draw(){
  const g={};if(src==="soc")res.forEach(r=>(g[r.municipi]=g[r.municipi]||[]).push(r));
  Object.keys(g).forEach(m=>{const c=capM[norm(m)];if(!c)return;pts.push(c.p);
   L.circleMarker(c.p,{radius:9,color:"#fff",weight:2,fillColor:"#059669",fillOpacity:.95}).addTo(lay).bindPopup(`<b>${esc(m)}</b> (${g[m].length})<br>`+g[m].slice(0,5).map(r=>esc(r.nom)).join("<br>"))});
- if(pts.length)map.fitBounds(pts,{padding:[30,30],maxZoom:13});
+ if(pts.length&&$("map").offsetWidth>0)map.fitBounds(pts,{padding:[30,30],maxZoom:13});
 }
 
 const at=i=>{const x={ca:0,es:1,en:2}[lang];return AX[lang]?AX[lang][i]:[AIDS[i][0][x],AIDS[i][1][x]]};
@@ -591,13 +611,26 @@ async function rowsG(){
  const rd=[hr0,15000,40000,100000].filter((r,i,a)=>r>=hr0&&a.indexOf(r)===i).sort((a,b)=>a-b);
  for(let i=0;i<rd.length;i++){hr=rd[i];await rowsG1(i===rd.length-1);if(res.length)return}
 }
+let DIP=null;
+const isStd=()=>window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+const instDone=()=>{try{return localStorage.getItem("afronta_inst")==="1"}catch(e){return false}};
+function showInst(){const b=$("inst"),T=I[lang];
+ if(isStd()||instDone()||!window.matchMedia("(max-width:860px)").matches){b.hidden=true;return}
+ if(DIP){b.innerHTML=`<span>${T.inst_and}</span> <button class="nb" data-inst="go">${T.inst_btn}</button> <button class="nb" data-inst="x" aria-label="${T.inst_x}">✕</button>`;b.hidden=false}
+ else if(isIOS()){b.innerHTML=`<span>${T.inst_ios}</span> <button class="nb" data-inst="x" aria-label="${T.inst_x}">✕</button>`;b.hidden=false}
+ else b.hidden=true}
+function updOff(){const b=$("offb");b.hidden=navigator.onLine;b.textContent=I[lang].off}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();DIP=e;showInst()});
+window.addEventListener("offline",updOff);
+window.addEventListener("online",()=>{updOff();if(!reg.length)init();else if(sel&&!res.length)go(sel.name)});
 function renderNeeds(){const T=I[lang];$("needs").innerHTML=T.nd.map((n,i)=>`<button class="nb" data-nd="${i}" aria-pressed="${i===need}">${n}</button>`).join("");
  const h=$("help"),N=src==="soc"?NEEDS[need]:null;if(N&&N.h){h.hidden=false;h.innerHTML=`<i class="fa-solid fa-phone"></i> ${T.hl[N.h]} <a class="btn" href="tel:${N.t}">${N.t.replace("116111","116 111")}</a>`}else h.hidden=true}
 
 function text(){
  const T=I[lang],ix={ca:0,es:1,en:2}[lang];document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
- [["t_em","em"],["t_hc","hc"],["t_band","band"],["t_bandl","bandl"],["t_badge","badge"],["t_h1","h1"],["t_hp","hp"],["t_go","go"],["t_quick","quick"],["t_tag1","tag1"],["t_h2a","h2a"],["t_note","note"],["t_tag2","tag2"],["t_h2b","h2b"],["t_pb","pb"],["t_news","news"],["t_tag3","tag3"],["t_h2c","h2c"],["t_dirs","dirs"],["t_rd","rd"],["t_ez","easy"],["t_need","need"],["t_kw","kw"],["t_priv_h","priv_h"],["t_priv","priv"],["t_priv2","priv2"],["t_qe","qe"],["t_geo","geo"],["t_pr","pr"],["t_tag4","tag4"],["t_ab_h","ab_h"],["t_ab1","ab1"],["t_ab2","ab2"],["t_ab2b","ab2b"],["t_cl","cl"],["t_ab3","ab3"]].forEach(([i,k])=>$(i).textContent=T[k]);
- $("q").placeholder=T.ph;$("n4").textContent=T.n4;renderFirst();$("leg").textContent=(src==="soc"?T.src:src==="far"?T.hsrc:T.srcX[src])+" · "+T.upd(new Date().toLocaleDateString(lang),UPD?UPD.toLocaleDateString(lang):"");$("seg").innerHTML=T.srcs.map((n,i)=>`<button class="nb" data-src="${["soc","sal","edu","far"][i]}" aria-pressed="${src===["soc","sal","edu","far"][i]}">${n}</button>`).join("");$("needsb").hidden=src!=="soc";renderNeeds();if(document.body.classList.contains("easy"))$("t_hp").textContent=T.easyhp;$("fq").placeholder=T.fph;if(src==="soc"&&$("ft").options[0])$("ft").options[0].textContent=T.all;["n1","n2","n3"].forEach((id,i)=>$(id).textContent=T.n[i]);
+ [["t_em","em"],["t_hc","hc"],["t_band","band"],["t_bandl","bandl"],["t_badge","badge"],["t_h1","h1"],["t_hp","hp"],["t_go","go"],["t_quick","quick"],["t_tag1","tag1"],["t_h2a","h2a"],["t_note","note"],["t_tag2","tag2"],["t_h2b","h2b"],["t_pb","pb"],["t_news","news"],["t_tag3","tag3"],["t_h2c","h2c"],["t_dirs","dirs"],["t_rd","rd"],["t_ez","easy"],["t_need","need"],["t_kw","kw"],["t_priv_h","priv_h"],["t_priv","priv"],["t_priv2","priv2"],["t_priv3","priv3"],["t_qe","qe"],["t_geo","geo"],["t_pr","pr"],["t_tag4","tag4"],["t_ab_h","ab_h"],["t_ab1","ab1"],["t_ab2","ab2"],["t_ab2b","ab2b"],["t_cl","cl"],["t_ab3","ab3"]].forEach(([i,k])=>$(i).textContent=T[k]);
+ $("q").placeholder=T.ph;$("n4").textContent=T.n4;showInst();updOff();$("e112").setAttribute("aria-label",T.c112);$("vt").innerHTML=T.vw.map((n,i)=>`<button class="nb" data-vw="${i}" aria-pressed="${(i===1)===mapView}">${n}</button>`).join("");renderFirst();$("leg").textContent=(src==="soc"?T.src:src==="far"?T.hsrc:T.srcX[src])+" · "+T.upd(new Date().toLocaleDateString(lang),UPD?UPD.toLocaleDateString(lang):"");$("seg").innerHTML=T.srcs.map((n,i)=>`<button class="nb" data-src="${["soc","sal","edu","far"][i]}" aria-pressed="${src===["soc","sal","edu","far"][i]}">${n}</button>`).join("");$("needsb").hidden=src!=="soc";renderNeeds();if(document.body.classList.contains("easy"))$("t_hp").textContent=T.easyhp;$("fq").placeholder=T.fph;if(src==="soc"&&$("ft").options[0])$("ft").options[0].textContent=T.all;["n1","n2","n3"].forEach((id,i)=>$(id).textContent=T.n[i]);
  $("quick").innerHTML=QUICK.map(q=>`<button class="chip" data-q="${q}">${q}</button>`).join("");
  $("dirs").innerHTML=DIRS.map((d,i)=>`<a class="ac" href="${d[1]}" target="_blank" rel="noopener"><i class="fa-solid ${d[0]}"></i><b>${T.dl[i]}</b><span>${T.open} →</span></a>`).join("");
  const card=a=>a.map(x=>`<a class="ac" href="${x[2]}" target="_blank" rel="noopener"><i class="fa-solid ${x[0]}"></i><b>${x[1]}</b><span>${T.open} →</span></a>`).join("");
@@ -607,7 +640,9 @@ function text(){
  if(sel&&res.length)draw();else if(!names.length&&!reg.length)say("ld");else if(!sel)say("ready");
 }
 document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
- if(b.id==="cl"){need=-1;renderNeeds();if(sel)go(sel.name);else{$("fq").value="";$("ft").value=""}}
+ if(b.dataset.inst){if(b.dataset.inst==="go"&&DIP){DIP.prompt();DIP=null}else{try{localStorage.setItem("afronta_inst","1")}catch(e){}}$("inst").hidden=true}
+ else if(b.dataset.vw!==undefined){mapView=b.dataset.vw==="1";document.querySelector(".split").classList.toggle("mv-map",mapView);text()}
+ else if(b.id==="cl"){need=-1;renderNeeds();if(sel)go(sel.name);else{$("fq").value="";$("ft").value=""}}
  else if(b.id==="qe"){quitNow()}
  else if(b.id==="geo"){geoGo()}
  else if(b.id==="pr"){window.print()}
@@ -626,24 +661,6 @@ $("sf").onsubmit=e=>{e.preventDefault();go($("q").value)};
 $("lang").onchange=e=>{lang=e.target.value;text()};
 $("ft").onchange=()=>{if(sel)rows()};$("fq").onchange=()=>{if(sel)rows()};
 text();init();
-
-// Captura de l'esdeveniment d'instal·lació de la PWA
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  const installBtn = document.getElementById('btnInstallPWA');
-  if (installBtn) installBtn.style.display = 'inline-block';
-});
-
-document.getElementById('btnInstallPWA')?.addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    document.getElementById('btnInstallPWA').style.display = 'none';
-  }
-});
 
 // Registre del Service Worker per a la PWA (offline)
 if('serviceWorker' in navigator){

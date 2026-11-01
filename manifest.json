@@ -1,8 +1,10 @@
 {
   "name": "Recursos per a famílies · AFRONTA",
   "short_name": "AFRONTA",
-  "description": "Cercador oficial de serveis socials i equipaments de Catalunya",
+  "description": "Cercador de serveis socials, salut i educació amb dades oficials de la Generalitat de Catalunya",
+  "lang": "ca",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#064e3b",
