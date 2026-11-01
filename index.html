@@ -177,6 +177,7 @@ body.hc .inst2{background:#000;color:#fff;border:2px solid #fff}body.hc .inst2 p
  .brand .w{flex-wrap:nowrap;justify-content:center;gap:10px;padding-top:6px;padding-bottom:6px}
  .brand img{width:calc(50% - 5px);max-width:320px;height:auto;min-width:0;object-fit:contain}
 }
+.first[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -559,7 +560,7 @@ const GS={
  sal:{ds:"8gmd-gz7i",geo:(la,lo,r)=>`within_circle(localitzacio,${la},${lo},${r})`,base:()=>"categoria like 'Salut|%'",tc:"categoria",tl:catTxt,
   fields:"nom,categoria,via,num,cpostal,poblacio,telefon1,web,latitud,longitud",tx:["nom","via","categoria"],
   ord:(la,lo)=>`distance_in_meters(localitzacio,'POINT(${lo} ${la})')`,
-  row:x=>({nom:x.nom,tipologia:catTxt(x.categoria),adreca:[x.via,x.num&&x.num!=="0"?x.num:""].filter(Boolean).join(", "),cp:pc(x.cpostal),municipi:x.poblacio,telefon:x.telefon1,web:x.web&&(x.web.url||x.web),lat:+x.latitud,lon:+x.longitud})},
+  row:x=>({nom:x.nom,tipologia:catTxt(x.categoria),adreca:[x.via,x.num&&x.num!=="0"&&!new RegExp("(^|\\D)"+x.num+"(\\D|$)").test(x.via||"")?x.num:""].filter(Boolean).join(", "),cp:pc(x.cpostal),municipi:x.poblacio,telefon:x.telefon1,web:x.web&&(x.web.url||x.web),lat:+x.latitud,lon:+x.longitud})},
  edu:{ds:"kvmv-ahh4",geo:(la,lo,r)=>bb(la,lo,r,"coordenades_geo_y","coordenades_geo_x"),base:()=>"curs="+q1(CURS),
   pre:async()=>{if(!CURS){const m=await soda("kvmv-ahh4",{$select:"curs,count(*) as n",$group:"curs",$limit:50});CURS=m.map(x=>x.curs).sort().pop()}},
   opts:T=>LVC.map((c,i)=>`<option value="${c}">${esc(T.lv[i])}</option>`).join(""),
@@ -612,17 +613,32 @@ function geoGo(){if(!navigator.geolocation||!Object.keys(capM).length){say("geoe
   if(b&&bd<60){$("q").value=b.name;go(b.name)}else say("geoer")},()=>say("geoer"),{timeout:10000})}
 async function firstStep(){
  FS=[];renderFirst();if(!sel||!sel.p)return;
- const cat="categoria like 'Serveis socials bàsics|Servei bàsic d%atenci%social%'",la=sel.p[0],lo=sel.p[1];
- try{let r=[];
-  for(const R of [5000,15000,40000,100000]){r=await soda("8gmd-gz7i",{$where:`within_circle(localitzacio,${la},${lo},${R}) AND ${cat}`,$select:"nom,via,num,cpostal,poblacio,telefon1,latitud,longitud",$limit:50});if(r.length)break}
-  FS=r.map(x=>({...x,d:hav(sel.p,[+x.latitud,+x.longitud])})).sort((a,b)=>a.d-b.d).slice(0,2);renderFirst();
- }catch(e){}
+ const la=sel.p[0],lo=sel.p[1];
+ const addr=(via,num,cp,pob)=>[via,num&&num!=="0"&&!new RegExp("(^|\\D)"+num+"(\\D|$)").test(via||"")?num:"",pc(cp),pob].filter(Boolean).join(", ");
+ try{
+  let r=[];
+  for(const R of [5000,15000,40000,100000]){
+   r=await soda("8gmd-gz7i",{$where:`within_circle(localitzacio,${la},${lo},${R}) AND categoria like '%Servei b%sic d%atenci%social%'`,$select:"nom,via,num,cpostal,poblacio,telefon1,latitud,longitud",$limit:50});
+   if(r.length)break}
+  FS=r.filter(x=>x.latitud&&x.longitud).map(x=>({nom:x.nom,a:addr(x.via,x.num,x.cpostal,x.poblacio),tel:x.telefon1||"",lat:x.latitud,lon:x.longitud,d:hav(sel.p,[+x.latitud,+x.longitud])})).sort((a,b)=>a.d-b.d).slice(0,2);
+ }catch(e){console.warn("firstStep equipaments",e)}
+ if(!FS.length){
+  try{
+   const W="upper(tipologia) like '%SIC D%ATENCI%SOCIAL%'";
+   const g=await soda("ivft-vegh",{$select:"municipi,count(*) as n",$group:"municipi",$where:W,$limit:2000});
+   const c=g.map(x=>({m:x.municipi,c:capM[norm(x.municipi)]})).filter(x=>x.c).map(x=>({m:x.m,d:hav(sel.p,x.c.p),p:x.c.p})).sort((a,b)=>a.d-b.d).slice(0,3);
+   if(c.length){
+    const rr=await soda("ivft-vegh",{$where:`municipi=${q1(c[0].m)} AND ${W}`,$select:"nom,adreca,cp,municipi,telefon",$limit:2});
+    FS=rr.map(x=>({nom:x.nom,a:[x.adreca,x.cp,x.municipi].filter(Boolean).join(", "),tel:x.telefon||"",lat:c[0].p[0],lon:c[0].p[1],d:c[0].d,approx:true}))}
+  }catch(e){console.warn("firstStep registre",e)}
+ }
+ renderFirst();
 }
 function renderFirst(){
  const T=I[lang],box=$("first");if(!FS.length){box.hidden=true;box.innerHTML="";return}
  box.innerHTML=`<h3><i class="fa-solid fa-flag"></i> ${T.fs_h}</h3><p>${T.fs_p}</p>`+FS.map(x=>{
-  const a=[x.via,x.num&&x.num!=="0"?x.num:"",pc(x.cpostal),x.poblacio].filter(Boolean).join(", "),t=String(x.telefon1||"").replace(/[^0-9+]/g,"");
-  return `<div class="rc" style="--c:#b45309"><span class="km">${x.d<1?"< 1 km":"≈ "+x.d.toFixed(1)+" km"}</span><h3>${esc(x.nom)}</h3><small>${esc(a)}</small>${t?`<br><a class="btn" href="tel:${t}"><i class="fa-solid fa-phone"></i> ${T.call} ${esc(x.telefon1)}</a>`:""}<div class="acts"><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(x.latitud+","+x.longitud)}" target="_blank" rel="noopener"><i class="fa-solid fa-route"></i> ${T.route}</a></div></div>`}).join("")+`<p class="note">${T.cita}</p>`;
+  const t=String(x.tel).replace(/[^0-9+]/g,""),dist=x.d<1?"< 1 km":"≈ "+(x.approx?Math.round(x.d):x.d.toFixed(1))+" km",q=x.approx?x.a+", Catalunya":x.lat+","+x.lon;
+  return `<div class="rc" style="--c:#b45309"><span class="km">${dist}</span><h3>${esc(x.nom)}</h3><small>${esc(x.a)}</small>${t?`<br><a class="btn" href="tel:${t}"><i class="fa-solid fa-phone"></i> ${T.call} ${esc(x.tel)}</a>`:""}<div class="acts"><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}" target="_blank" rel="noopener"><i class="fa-solid fa-route"></i> ${T.route}</a></div></div>`}).join("")+`<p class="note">${T.cita}</p>`;
  box.hidden=false}
 async function rowsG(){
  const rd=[hr0,15000,40000,100000].filter((r,i,a)=>r>=hr0&&a.indexOf(r)===i).sort((a,b)=>a-b);
