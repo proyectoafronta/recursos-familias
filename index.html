@@ -165,6 +165,14 @@ body.hc .inst,body.hc .offb{background:#000;color:#fff;border:2px solid #fff}
 .e112{display:none}
 @media(max-width:860px){.e112{display:inline-flex;position:fixed;left:10px;bottom:10px;z-index:3000;background:#dc2626;color:#fff;border:2px solid #fff;border-radius:99px;padding:8px 14px;font-weight:800;text-decoration:none;align-items:center;gap:6px;box-shadow:0 4px 14px #0006}}
 @media print{.e112,.inst,.offb{display:none!important}}
+.inst2{display:flex;gap:12px;align-items:flex-start;background:#fff;color:#0f172a;border-radius:16px;padding:14px 16px;text-align:start;max-width:640px;margin:14px auto 0;box-shadow:0 10px 30px #0006;position:relative}
+.inst2 img{border-radius:12px;flex:none}
+.inst2 p{margin:4px 0;font-size:.9rem;color:#334155}.inst2 .shr{font-size:.8rem;color:#64748b}
+.inst-a{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.inst2 button.btn{border:0;cursor:pointer;font:inherit;font-weight:700}
+.inst-x{position:absolute;top:2px;inset-inline-end:4px;background:none;border:0;font-size:1.1rem;cursor:pointer;color:#475569;min-width:44px;min-height:44px}
+#inst[hidden]{display:none}
+body.hc .inst2{background:#000;color:#fff;border:2px solid #fff}body.hc .inst2 p,body.hc .inst2 .shr,body.hc .inst-x{color:#fff}
 </style>
 </head>
 <body>
@@ -197,7 +205,6 @@ body.hc .inst,body.hc .offb{background:#000;color:#fff;border:2px solid #fff}
 
 <div class="band"><div class="w"><span><i class="fa-solid fa-bell"></i> <span id="t_band"></span></span><a href="#alertes" id="t_bandl"></a></div></div>
 
-<div class="inst" id="inst" hidden></div>
 <div class="offb" id="offb" role="alert" hidden></div>
 <section class="hero"><div class="w">
   <span class="badge"><i class="fa-solid fa-shield-heart"></i> <span id="t_badge"></span></span>
@@ -205,6 +212,7 @@ body.hc .inst,body.hc .offb{background:#000;color:#fff;border:2px solid #fff}
   <form class="sb" id="sf" role="search"><input id="q" type="text" autocomplete="off" list="dl"><datalist id="dl"></datalist><button type="submit" id="t_go"></button></form>
   <div class="cand" id="cand"></div>
   <div class="quick"><span id="t_quick"></span><span id="quick"></span><button type="button" class="chip" id="geo"><i class="fa-solid fa-location-crosshairs"></i> <span id="t_geo"></span></button></div>
+  <div id="inst" hidden></div>
 </div></section>
 
 <section class="sec" id="mapa"><div class="w">
@@ -402,11 +410,16 @@ Object.assign(I.en,{cl:"Clear filters",fbm:t=>`No services match this filter in 
 Object.assign(I.fr,{cl:"Effacer les filtres",fbm:t=>`Aucun service correspondant à ce filtre à ${t}. Voici ceux des communes les plus proches, avec la distance approximative.`,nores:"Aucun service trouvé avec ce filtre. Essayez « Effacer les filtres » ou modifiez la recherche.",ab2b:"Pour corriger une donnée, il faut s'adresser à l'organisme qui gère le registre concerné (services sociaux, santé, éducation, etc.) : cette page n'en affiche que le contenu et ne peut pas le modifier."});
 Object.assign(I.ar,{cl:"مسح المرشحات",fbm:t=>`لا توجد خدمات بهذا المرشح في ${t}. نعرض لك خدمات أقرب البلديات مع المسافة التقريبية.`,nores:"لم يتم العثور على أي خدمة بهذا المرشح. جرّب «مسح المرشحات» أو غيّر البحث.",ab2b:"لتصحيح أي بيان، يجب التوجه إلى الجهة التي تدير السجل المعني (الخدمات الاجتماعية أو الصحة أو التعليم وغيرها): هذه الصفحة تعرض المحتوى فقط ولا يمكنها تعديله."});
 Object.assign(I.ca,{vw:["Llista","Mapa"]});Object.assign(I.es,{vw:["Lista","Mapa"]});Object.assign(I.en,{vw:["List","Map"]});Object.assign(I.fr,{vw:["Liste","Carte"]});Object.assign(I.ar,{vw:["القائمة","الخريطة"]});
-Object.assign(I.ca,{inst_ios:"Per tenir aquesta pàgina a mà: toca el botó Comparteix (el quadrat amb una fletxa) i tria «Afegeix a la pantalla d'inici».",inst_and:"Pots instal·lar aquesta pàgina al mòbil perquè s'obri com una aplicació.",inst_btn:"Instal·la",inst_x:"Tanca l'avís",off:"No tens connexió a internet. Aquesta pàgina necessita connexió per mostrar serveis i mapes. En una emergència, truca al 112.",priv3:"Si tanques l'avís d'instal·lació, el teu dispositiu recorda només aquest fet (sense enviar-lo enlloc) per no tornar-te'l a mostrar.",c112:"Truca al 112 (emergències)"});
-Object.assign(I.es,{inst_ios:"Para tener esta página a mano: toca el botón Compartir (el cuadrado con una flecha) y elige «Añadir a pantalla de inicio».",inst_and:"Puedes instalar esta página en el móvil para que se abra como una aplicación.",inst_btn:"Instalar",inst_x:"Cerrar el aviso",off:"No tienes conexión a internet. Esta página necesita conexión para mostrar servicios y mapas. En una emergencia, llama al 112.",priv3:"Si cierras el aviso de instalación, tu dispositivo recuerda solo ese hecho (sin enviarlo a ningún sitio) para no volver a mostrártelo.",c112:"Llama al 112 (emergencias)"});
-Object.assign(I.en,{inst_ios:"To keep this page handy: tap the Share button (the square with an arrow) and choose “Add to Home Screen”.",inst_and:"You can install this page on your phone so it opens like an app.",inst_btn:"Install",inst_x:"Close notice",off:"You are offline. This page needs an internet connection to show services and maps. In an emergency, call 112.",priv3:"If you close the install notice, your device remembers only that fact (without sending it anywhere) so it is not shown again.",c112:"Call 112 (emergencies)"});
-Object.assign(I.fr,{inst_ios:"Pour avoir cette page sous la main : touchez le bouton Partager (le carré avec une flèche) et choisissez « Sur l'écran d'accueil ».",inst_and:"Vous pouvez installer cette page sur votre téléphone pour qu'elle s'ouvre comme une application.",inst_btn:"Installer",inst_x:"Fermer l'avis",off:"Vous n'avez pas de connexion internet. Cette page a besoin de connexion pour afficher services et cartes. En cas d'urgence, appelez le 112.",priv3:"Si vous fermez l'avis d'installation, votre appareil retient uniquement ce fait (sans l'envoyer nulle part) pour ne plus vous l'afficher.",c112:"Appeler le 112 (urgences)"});
-Object.assign(I.ar,{inst_ios:"لإبقاء هذه الصفحة في متناول يدك: اضغط زر المشاركة (المربع مع سهم) ثم اختر «إضافة إلى الشاشة الرئيسية».",inst_and:"يمكنك تثبيت هذه الصفحة على هاتفك لتُفتح كتطبيق.",inst_btn:"تثبيت",inst_x:"إغلاق التنبيه",off:"لا يوجد اتصال بالإنترنت. تحتاج هذه الصفحة إلى اتصال لعرض الخدمات والخرائط. في حالات الطوارئ اتصل بالرقم 112.",priv3:"إذا أغلقت تنبيه التثبيت، يتذكر جهازك هذا الأمر فقط (دون إرساله إلى أي جهة) حتى لا يظهر لك مجدداً.",c112:"اتصل بالرقم 112 (الطوارئ)"});
+Object.assign(I.ca,{inst_ios:"Per tenir aquesta pàgina a mà: toca el botó Comparteix (el quadrat amb una fletxa) i tria «Afegeix a la pantalla d'inici».",inst_and:"Pots instal·lar aquesta pàgina al mòbil perquè s'obri com una aplicació.",inst_btn:"Instal·la",inst_x:"Tanca l'avís",off:"No tens connexió a internet. Aquesta pàgina necessita connexió per mostrar serveis i mapes. En una emergència, truca al 112.",priv3:"Si tanques l'avís d'instal·lació o indiques que ja la tens, el teu dispositiu recorda només això i la data (sense enviar-ho enlloc) per no tornar-te'l a mostrar.",c112:"Truca al 112 (emergències)"});
+Object.assign(I.es,{inst_ios:"Para tener esta página a mano: toca el botón Compartir (el cuadrado con una flecha) y elige «Añadir a pantalla de inicio».",inst_and:"Puedes instalar esta página en el móvil para que se abra como una aplicación.",inst_btn:"Instalar",inst_x:"Cerrar el aviso",off:"No tienes conexión a internet. Esta página necesita conexión para mostrar servicios y mapas. En una emergencia, llama al 112.",priv3:"Si cierras el aviso de instalación o indicas que ya la tienes, tu dispositivo recuerda solo eso y la fecha (sin enviarlo a ningún sitio) para no volver a mostrártelo.",c112:"Llama al 112 (emergencias)"});
+Object.assign(I.en,{inst_ios:"To keep this page handy: tap the Share button (the square with an arrow) and choose “Add to Home Screen”.",inst_and:"You can install this page on your phone so it opens like an app.",inst_btn:"Install",inst_x:"Close notice",off:"You are offline. This page needs an internet connection to show services and maps. In an emergency, call 112.",priv3:"If you close the install notice or say you already have it, your device remembers only that and the date (without sending it anywhere) so it is not shown again.",c112:"Call 112 (emergencies)"});
+Object.assign(I.fr,{inst_ios:"Pour avoir cette page sous la main : touchez le bouton Partager (le carré avec une flèche) et choisissez « Sur l'écran d'accueil ».",inst_and:"Vous pouvez installer cette page sur votre téléphone pour qu'elle s'ouvre comme une application.",inst_btn:"Installer",inst_x:"Fermer l'avis",off:"Vous n'avez pas de connexion internet. Cette page a besoin de connexion pour afficher services et cartes. En cas d'urgence, appelez le 112.",priv3:"Si vous fermez l'avis d'installation ou indiquez que vous l'avez déjà, votre appareil retient uniquement cela et la date (sans l'envoyer nulle part) pour ne plus vous l'afficher.",c112:"Appeler le 112 (urgences)"});
+Object.assign(I.ar,{inst_ios:"لإبقاء هذه الصفحة في متناول يدك: اضغط زر المشاركة (المربع مع سهم) ثم اختر «إضافة إلى الشاشة الرئيسية».",inst_and:"يمكنك تثبيت هذه الصفحة على هاتفك لتُفتح كتطبيق.",inst_btn:"تثبيت",inst_x:"إغلاق التنبيه",off:"لا يوجد اتصال بالإنترنت. تحتاج هذه الصفحة إلى اتصال لعرض الخدمات والخرائط. في حالات الطوارئ اتصل بالرقم 112.",priv3:"إذا أغلقت تنبيه التثبيت أو أشرت إلى أن لديك التطبيق بالفعل، يتذكر جهازك ذلك والتاريخ فقط (دون إرساله إلى أي جهة) حتى لا يظهر لك مجدداً.",c112:"اتصل بالرقم 112 (الطوارئ)"});
+Object.assign(I.ca,{inst_t:"Tingues-la sempre a mà",inst_b:"Posa-la a la pantalla d'inici del mòbil i no hauràs de recordar l'adreça.",inst_shr:"Si comparteixes el mòbil amb algú, pensa si vols tenir la icona visible.",inst_have:"Ja la tinc"});
+Object.assign(I.es,{inst_t:"Ténla siempre a mano",inst_b:"Ponla en la pantalla de inicio del móvil y no tendrás que recordar la dirección.",inst_shr:"Si compartes el móvil con alguien, piensa si quieres tener el icono visible.",inst_have:"Ya la tengo"});
+Object.assign(I.en,{inst_t:"Keep it always at hand",inst_b:"Add it to your phone's home screen so you don't have to remember the address.",inst_shr:"If you share your phone with someone, think about whether you want the icon to be visible.",inst_have:"I already have it"});
+Object.assign(I.fr,{inst_t:"Gardez-la toujours à portée de main",inst_b:"Ajoutez-la à l'écran d'accueil de votre téléphone pour ne pas avoir à retenir l'adresse.",inst_shr:"Si vous partagez votre téléphone avec quelqu'un, demandez-vous si vous voulez que l'icône soit visible.",inst_have:"Je l'ai déjà"});
+Object.assign(I.ar,{inst_t:"أبقها دائماً في متناول يدك",inst_b:"أضفها إلى الشاشة الرئيسية في هاتفك فلا تحتاج إلى تذكر العنوان.",inst_shr:"إذا كنت تشارك هاتفك مع شخص ما، فكّر فيما إذا كنت تريد أن تكون الأيقونة ظاهرة.",inst_have:"لدي التطبيق بالفعل"});
 const NEEDS=[{k:["MENJADOR","ALIMENT"]},{k:["ALLOTJ","ALBERG","HABITATGE","ACOLLIDA","EXCLUSI"]},{k:["VIOL","MASCLISTA","MALTRACT"],h:"viol",t:"016"},{k:["INFANT","ADOLESC","MENOR"],h:"inf",t:"116111"},{k:["GENT GRAN","TELEASSIST","ENVELLIMENT"]},{k:["DISCAPACIT"]},{k:["SALUT MENTAL","TRASTORN"],h:"salm",t:"024"},{k:["DOMICILI"]}];
 
 const ALERTS=[["fa-cloud-sun-rain","AEMET","https://www.aemet.es/es/eltiempo/prediccion/avisos"],
@@ -614,14 +627,14 @@ async function rowsG(){
 let DIP=null;
 const isStd=()=>window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
 const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-const instDone=()=>{try{return localStorage.getItem("afronta_inst")==="1"}catch(e){return false}};
+const instStore=v=>{try{localStorage.setItem("afronta_inst",v)}catch(e){}};
+const instDone=()=>{try{const v=localStorage.getItem("afronta_inst");if(v==="have")return true;return /^\d+$/.test(v||"")&&Date.now()-(+v)<30*864e5}catch(e){return false}};
 function showInst(){const b=$("inst"),T=I[lang];
- if(isStd()||instDone()||!window.matchMedia("(max-width:860px)").matches){b.hidden=true;return}
- if(DIP){b.innerHTML=`<span>${T.inst_and}</span> <button class="nb" data-inst="go">${T.inst_btn}</button> <button class="nb" data-inst="x" aria-label="${T.inst_x}">✕</button>`;b.hidden=false}
- else if(isIOS()){b.innerHTML=`<span>${T.inst_ios}</span> <button class="nb" data-inst="x" aria-label="${T.inst_x}">✕</button>`;b.hidden=false}
- else b.hidden=true}
+ if(isStd()||instDone()||!window.matchMedia("(max-width:860px)").matches||(!DIP&&!isIOS())){b.hidden=true;return}
+ b.innerHTML=`<div class="inst2"><img src="img/icon-192.png" alt="" width="48" height="48"><div><b>${T.inst_t}</b><p>${T.inst_b}</p>${DIP?"":`<p>${T.inst_ios}</p>`}<p class="shr">${T.inst_shr}</p><div class="inst-a">${DIP?`<button class="btn" data-inst="go">${T.inst_btn}</button>`:""}<button class="nb" data-inst="have">${T.inst_have}</button></div></div><button class="inst-x" data-inst="x" aria-label="${T.inst_x}">✕</button></div>`;b.hidden=false}
 function updOff(){const b=$("offb");b.hidden=navigator.onLine;b.textContent=I[lang].off}
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();DIP=e;showInst()});
+window.addEventListener("appinstalled",()=>{instStore("have");$("inst").hidden=true});
 window.addEventListener("offline",updOff);
 window.addEventListener("online",()=>{updOff();if(!reg.length)init();else if(sel&&!res.length)go(sel.name)});
 function renderNeeds(){const T=I[lang];$("needs").innerHTML=T.nd.map((n,i)=>`<button class="nb" data-nd="${i}" aria-pressed="${i===need}">${n}</button>`).join("");
@@ -640,7 +653,7 @@ function text(){
  if(sel&&res.length)draw();else if(!names.length&&!reg.length)say("ld");else if(!sel)say("ready");
 }
 document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
- if(b.dataset.inst){if(b.dataset.inst==="go"&&DIP){DIP.prompt();DIP=null}else{try{localStorage.setItem("afronta_inst","1")}catch(e){}}$("inst").hidden=true}
+ if(b.dataset.inst){const k=b.dataset.inst;if(k==="go"&&DIP){const d=DIP;DIP=null;d.prompt();d.userChoice.then(c=>{if(c.outcome==="accepted")instStore("have")})}else if(k==="have")instStore("have");else instStore(String(Date.now()));$("inst").hidden=true}
  else if(b.dataset.vw!==undefined){mapView=b.dataset.vw==="1";document.querySelector(".split").classList.toggle("mv-map",mapView);text()}
  else if(b.id==="cl"){need=-1;renderNeeds();if(sel)go(sel.name);else{$("fq").value="";$("ft").value=""}}
  else if(b.id==="qe"){quitNow()}
